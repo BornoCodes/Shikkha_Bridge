@@ -45,6 +45,34 @@ export default {
         },
         background: "#FFF8F0",
         surface: "#F5E6D3",
+        cream: {
+          DEFAULT: "#FFF8F0",
+          dark: "#FDF2EF",
+        },
+        parchment: {
+          DEFAULT: "#F5E6D3",
+          dark: "#EAD5BC",
+        },
+        terracotta: {
+          DEFAULT: "#C84B31",
+          light: "#D96A4A",
+          dark: "#8E3321",
+        },
+        turmeric: {
+          DEFAULT: "#E8A317",
+          light: "#F0BD2E",
+          dark: "#A06E10",
+        },
+        lotus: {
+          DEFAULT: "#D4789C",
+          light: "#E18DB3",
+          dark: "#9E4668",
+        },
+        river: {
+          DEFAULT: "#4A90A4",
+          light: "#5FB3C4",
+          dark: "#3D7488",
+        },
         matti: {
           DEFAULT: "#2D1B0E",
           light: "#4A3526",

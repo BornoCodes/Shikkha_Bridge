@@ -93,4 +93,6 @@ Card.Header = CardHeader;
 Card.Body = CardBody;
 Card.Footer = CardFooter;
 
+export { Card, CardHeader, CardBody, CardFooter };
+export type { CardProps, CardHeaderProps, CardBodyProps, CardFooterProps };
 export default Card;

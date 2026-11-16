@@ -1,5 +1,4 @@
 import { useState, useEffect, useCallback } from 'react';
-import { jwtDecode } from 'jwt-decode';
 import api, { TOKEN_KEY } from '../utils/api';
 import type { User, AuthPayload, LoginCredentials, RegisterData } from '../types';
 
@@ -19,43 +18,91 @@ interface AuthState {
   isLoading: boolean;
 }
 
+function parseJwt(token: string): JwtPayload | null {
+  try {
+    const parts = token.split('.');
+    if (parts.length < 2) return null;
+    const base64Url = parts[1];
+    const base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
+    const jsonPayload = decodeURIComponent(
+      atob(base64)
+        .split('')
+        .map((c) => '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2))
+        .join('')
+    );
+    return JSON.parse(jsonPayload);
+  } catch {
+    return null;
+  }
+}
+
 export function useAuth() {
-  const [authState, setAuthState] = useState<AuthState>({
-    user: null,
-    token: null,
-    isAuthenticated: false,
-    isLoading: true,
+  const [authState, setAuthState] = useState<AuthState>(() => {
+    // Check saved user in localStorage for fast synchronous render
+    const savedToken = localStorage.getItem(TOKEN_KEY) || localStorage.getItem('shikkha_token');
+    const savedUserStr = localStorage.getItem('shikkha_user');
+    let initialUser: User | null = null;
+
+    if (savedUserStr) {
+      try {
+        initialUser = JSON.parse(savedUserStr);
+      } catch {
+        initialUser = null;
+      }
+    }
+
+    return {
+      user: initialUser,
+      token: savedToken,
+      isAuthenticated: !!savedToken,
+      isLoading: false,
+    };
   });
 
   const decodeAndSetUser = useCallback((token: string): User | null => {
     try {
-      const decoded = jwtDecode<JwtPayload>(token);
-      if (decoded.exp * 1000 < Date.now()) {
+      const decoded = parseJwt(token);
+      if (!decoded) return null;
+      if (decoded.exp && decoded.exp * 1000 < Date.now()) {
         localStorage.removeItem(TOKEN_KEY);
+        localStorage.removeItem('shikkha_token');
+        localStorage.removeItem('shikkha_user');
         return null;
       }
       const user: User = {
-        id: decoded.sub,
+        id: decoded.sub || 'usr-1',
         email: decoded.email,
-        name: decoded.name,
-        role: decoded.role as User['role'],
-        createdAt: new Date(decoded.iat * 1000).toISOString(),
+        name: decoded.name || decoded.email.split('@')[0],
+        role: (decoded.role as User['role']) || 'student',
+        createdAt: new Date((decoded.iat || Date.now() / 1000) * 1000).toISOString(),
       };
       return user;
     } catch {
-      localStorage.removeItem(TOKEN_KEY);
       return null;
     }
   }, []);
 
   useEffect(() => {
-    const token = localStorage.getItem(TOKEN_KEY);
+    const token = localStorage.getItem(TOKEN_KEY) || localStorage.getItem('shikkha_token');
+    const savedUser = localStorage.getItem('shikkha_user');
+
     if (token) {
-      const user = decodeAndSetUser(token);
+      let user: User | null = null;
+      if (savedUser) {
+        try {
+          user = JSON.parse(savedUser);
+        } catch {
+          user = null;
+        }
+      }
+      if (!user) {
+        user = decodeAndSetUser(token);
+      }
+
       setAuthState({
         user,
-        token: user ? token : null,
-        isAuthenticated: !!user,
+        token,
+        isAuthenticated: !!token,
         isLoading: false,
       });
     } else {
@@ -65,32 +112,40 @@ export function useAuth() {
 
   const login = useCallback(async (credentials: LoginCredentials): Promise<User> => {
     const { data } = await api.post<AuthPayload>('/auth/login', credentials);
-    localStorage.setItem(TOKEN_KEY, data.token);
-    const user = data.user;
+    const token = data.token;
+    localStorage.setItem(TOKEN_KEY, token);
+    localStorage.setItem('shikkha_token', token);
+    localStorage.setItem('shikkha_user', JSON.stringify(data.user));
+
     setAuthState({
-      user,
-      token: data.token,
+      user: data.user,
+      token,
       isAuthenticated: true,
       isLoading: false,
     });
-    return user;
+    return data.user;
   }, []);
 
   const register = useCallback(async (registerData: RegisterData): Promise<User> => {
     const { data } = await api.post<AuthPayload>('/auth/register', registerData);
-    localStorage.setItem(TOKEN_KEY, data.token);
-    const user = data.user;
+    const token = data.token;
+    localStorage.setItem(TOKEN_KEY, token);
+    localStorage.setItem('shikkha_token', token);
+    localStorage.setItem('shikkha_user', JSON.stringify(data.user));
+
     setAuthState({
-      user,
-      token: data.token,
+      user: data.user,
+      token,
       isAuthenticated: true,
       isLoading: false,
     });
-    return user;
+    return data.user;
   }, []);
 
   const logout = useCallback(() => {
     localStorage.removeItem(TOKEN_KEY);
+    localStorage.removeItem('shikkha_token');
+    localStorage.removeItem('shikkha_user');
     setAuthState({
       user: null,
       token: null,
@@ -120,3 +175,5 @@ export function useAuth() {
     getCurrentUser,
   };
 }
+
+export default useAuth;

@@ -25,3 +25,38 @@ We aim to create an educational ecosystem where technology makes learning more e
 Developed collaboratively by a team of 4 members as an academic software development project.
 
 More features and improvements are planned as development progresses.
+
+
+
+## 🏛️ Architecture: How Code is Separated
+
+
+Each of the 4 team members has 2 dedicated academic recovery features cleanly isolated across files:
+
+```
+shikkha-bridge/
+├── client/src/modules/
+│   ├── auth/                       # Shared Base (Program feature: JWT login & register)
+│   ├── absence/                    # 🔴 Member 1 (F1: Logging, F2: Gaps)
+│   ├── assessment/                 # 🟡 Member 2 (F3: Quizzes, F4: Evaluation)
+│   ├── recovery/                   # 🔵 Member 3 (F5: Roadmaps, F6: Story Journey)
+│   ├── content/                    # 🟣 Member 4 (F8: Peer Library & Collaboration)
+│   ├── dashboard/
+│   │   ├── student/                # 🔵 Member 3 (F6: Student Dashboard)
+│   │   └── teacher/                # 🟣 Member 4 (F7: Teacher Review & Approvals)
+│   └── notifications/              # Shared Alerts & Peer Bridge
+│
+├── server/src/
+│   ├── auth/                       # Shared Base
+│   ├── absence/                    # 🔴 Member 1
+│   ├── assessment/                 # 🟡 Member 2
+│   ├── recovery/                   # 🔵 Member 3
+│   ├── content/                    # 🟣 Member 4
+│   └── notifications/              # Shared Base
+│
+└── ai-service/app/
+    ├── routers/gap_analysis.py     # 🔴 Member 1
+    ├── routers/quiz_generation.py  # 🟡 Member 2
+    └── routers/plan_generation.py  # 🔵 Member 3
+```
+

@@ -1,0 +1,23 @@
+{
+  "name": "shikkha-bridge",
+  "version": "1.0.0",
+  "private": true,
+  "description": "ShikkhaBridge — Learning Recovery System",
+  "scripts": {
+    "dev": "npm run dev --prefix client",
+    "dev:client": "npm run dev --prefix client",
+    "dev:server": "npm run start:dev --prefix server",
+    "build": "npm run build --prefix client",
+    "build:client": "npm run build --prefix client",
+    "build:server": "npm run build --prefix server",
+    "install:all": "npm install --prefix client && npm install --prefix server"
+  },
+  "keywords": [
+    "education-tech",
+    "learning-recovery",
+    "bangladesh",
+    "react",
+    "nestjs",
+    "fastapi"
+  ]
+}

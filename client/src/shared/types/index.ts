@@ -1,14 +1,31 @@
 // ===== User & Auth =====
-export type UserRole = 'student' | 'teacher' | 'admin';
+export type UserRole = 'student' | 'teacher' | 'student_tutor' | 'admin';
+export type EducationTier = 'kids' | 'school' | 'college' | 'university';
+
+export type MascotSpecies = 'cat' | 'tiger' | 'owl' | 'bunny';
+export type MascotAccessory = 'glasses' | 'cap' | 'flower' | 'scarf' | 'none';
+
+export interface ChibiMascotConfig {
+  name: string;
+  species: MascotSpecies;
+  color: string;
+  accessory: MascotAccessory;
+  level: number;
+  happiness: number;
+}
 
 export interface User {
   id: string;
   name: string;
   email: string;
   role: UserRole;
+  tier: EducationTier;
   class?: string;
   school?: string;
+  university?: string;
+  department?: string;
   avatar?: string;
+  mascot?: ChibiMascotConfig;
   createdAt: string;
 }
 
@@ -27,8 +44,12 @@ export interface RegisterData {
   email: string;
   password: string;
   role: UserRole;
+  tier?: EducationTier;
   class?: string;
   school?: string;
+  university?: string;
+  department?: string;
+  mascot?: ChibiMascotConfig;
 }
 
 // ===== Academic Structure =====
@@ -36,7 +57,9 @@ export interface Subject {
   id: string;
   name: string;
   nameBn?: string;
-  class: string;
+  code?: string; // e.g. CSE220, PHY101
+  tier: EducationTier;
+  class?: string;
   description?: string;
   topicCount?: number;
 }
@@ -51,12 +74,92 @@ export interface Topic {
   prerequisiteIds?: string[];
 }
 
+// ===== Unified Linear Learning Path =====
+export type CheckpointType = 'video' | 'quiz' | 'summary' | 'assignment';
+
+export interface PathCheckpoint {
+  id: string;
+  order: number;
+  type: CheckpointType;
+  title: string;
+  titleBn?: string;
+  duration?: string; // e.g. "14 mins", "5 questions", "Quick Read"
+  status: 'locked' | 'current' | 'completed';
+  points: number;
+  videoUrl?: string;
+  videoDuration?: string;
+  summaryContent?: string;
+  keyTakeaways?: string[];
+  quizQuestions?: {
+    id: string;
+    question: string;
+    options: string[];
+    correctAnswer: string;
+    explanation: string;
+  }[];
+  assignmentDetails?: {
+    title: string;
+    prompt: string;
+    dueDate: string;
+    submissionFormat: string;
+  };
+  tutorTip?: string;
+}
+
+// ===== Peer Note Requests & Tutor System (Strict Rules) =====
+export interface NoteRequest {
+  id: string;
+  studentId: string;
+  studentName: string;
+  subject: string;
+  courseCode?: string;
+  tier: EducationTier;
+  topicName: string;
+  description: string;
+  status: 'open' | 'fulfilled';
+  fulfilledCount: number;
+  createdAt: string;
+}
+
+export interface SharedNote {
+  id: string;
+  requestId: string;
+  title: string;
+  subject: string;
+  courseCode?: string;
+  tier: EducationTier;
+  uploaderId: string;
+  uploaderName: string;
+  uploaderRole: 'student' | 'student_tutor';
+  url: string;
+  rating: number; // e.g. 4.9
+  starCount: number; // total stars
+  daysRemaining: number; // 30-day countdown timer: deleted if < 5 stars
+  isWarningPurge?: boolean;
+  createdAt: string;
+}
+
+export interface StudentTutor {
+  id: string;
+  name: string;
+  university: string;
+  major: string;
+  year: string;
+  subjects: string[];
+  rating: number;
+  sessionCount: number;
+  avatar: string;
+  bio: string;
+  availableStatus: 'online' | 'busy' | 'offline';
+}
+
 // ===== Absence Tracking =====
 export type AbsenceReason =
+  | 'flood'
   | 'illness'
   | 'family'
+  | 'cyclone'
   | 'transport'
-  | 'weather'
   | 'other';
 
 export interface Absence {
@@ -141,7 +244,7 @@ export interface RecoveryPlan {
 }
 
 // ===== Content =====
-export type ContentType = 'video' | 'pdf' | 'article' | 'quiz' | 'interactive' | 'image';
+export type ContentType = 'video' | 'pdf' | 'article' | 'quiz' | 'interactive' | 'image' | 'note' | 'exercise';
 
 export interface Content {
   id: string;
@@ -166,6 +269,8 @@ export type NotificationType =
   | 'assessment_result'
   | 'absence_recorded'
   | 'content_added'
+  | 'note_purged'
+  | 'tutor_request'
   | 'general';
 
 export interface Notification {
@@ -185,26 +290,4 @@ export interface ApiResponse<T> {
   data: T;
   message?: string;
   errors?: Record<string, string[]>;
-}
-
-export interface PaginatedResponse<T> {
-  items: T[];
-  total: number;
-  page: number;
-  pageSize: number;
-  totalPages: number;
-}
-
-// ===== UI Helpers =====
-export interface NavItem {
-  label: string;
-  labelBn?: string;
-  href: string;
-  icon?: string;
-  badge?: number;
-}
-
-export interface SelectOption {
-  value: string;
-  label: string;
 }

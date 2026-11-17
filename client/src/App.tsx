@@ -10,6 +10,7 @@ import { AssessmentPage } from './modules/assessment/pages/AssessmentPage';
 import { RecoveryPlanListPage } from './modules/recovery/pages/RecoveryPlanListPage';
 import { RecoveryPlanPage } from './modules/recovery/pages/RecoveryPlanPage';
 import { ContentLibraryPage } from './modules/content/pages/ContentLibraryPage';
+import { UniversityNoteExchangePage } from './modules/content/pages/UniversityNoteExchangePage';
 import { StudentDashboard } from './modules/dashboard/student/pages/StudentDashboard';
 import { TeacherDashboard } from './modules/dashboard/teacher/pages/TeacherDashboard';
 import { PlanApprovalPage } from './modules/dashboard/teacher/pages/PlanApprovalPage';
@@ -25,7 +26,7 @@ export const App: React.FC = () => {
 
       {/* Authenticated Dashboard Space */}
       <Route element={<Layout />}>
-        {/* Student Hub */}
+        {/* Student Hub & Unified Path */}
         <Route path="/student/dashboard" element={<StudentDashboard />} />
         <Route path="/student/absences" element={<AbsenceTracker />} />
         <Route path="/student/assessments" element={<AssessmentListPage />} />
@@ -33,6 +34,9 @@ export const App: React.FC = () => {
         <Route path="/student/recovery-plans" element={<RecoveryPlanListPage />} />
         <Route path="/student/recovery-plans/:id" element={<RecoveryPlanPage />} />
         <Route path="/student/content" element={<ContentLibraryPage />} />
+
+        {/* University Note Exchange & Student Tutor System */}
+        <Route path="/university/notes" element={<UniversityNoteExchangePage />} />
 
         {/* Teacher Hub */}
         <Route path="/teacher/dashboard" element={<TeacherDashboard />} />

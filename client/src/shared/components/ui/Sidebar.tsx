@@ -11,6 +11,7 @@ import {
   Bell,
   BookMarked,
   Sparkles,
+  GraduationCap,
 } from 'lucide-react';
 
 export const Sidebar: React.FC = () => {
@@ -18,7 +19,8 @@ export const Sidebar: React.FC = () => {
   const isTeacher = user?.role === 'teacher';
 
   const studentLinks = [
-    { to: '/student/dashboard', label: 'My Learning Hub', icon: LayoutDashboard },
+    { to: '/student/dashboard', label: 'My Learning Hub & Path', icon: LayoutDashboard },
+    { to: '/university/notes', label: 'Peer Notes & Tutors', icon: GraduationCap },
     { to: '/student/absences', label: 'Disruption & Gaps', icon: CalendarX },
     { to: '/student/recovery-plans', label: 'Recovery Pathways', icon: Compass },
     { to: '/student/assessments', label: 'Diagnostic Quizzes', icon: FileQuestion },
@@ -29,6 +31,7 @@ export const Sidebar: React.FC = () => {
   const teacherLinks = [
     { to: '/teacher/dashboard', label: 'Class Overview', icon: LayoutDashboard },
     { to: '/teacher/plans', label: 'Plan Approvals', icon: CheckCircle2 },
+    { to: '/university/notes', label: 'Student Tutor Reviews', icon: GraduationCap },
     { to: '/student/content', label: 'Resource Management', icon: FolderGit2 },
     { to: '/notifications', label: 'Alerts & Notices', icon: Bell },
   ];

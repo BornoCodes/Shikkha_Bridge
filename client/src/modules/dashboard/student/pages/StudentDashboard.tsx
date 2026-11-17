@@ -1,10 +1,12 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { StatsCard } from '../components/StatsCard';
 import { ActivityFeed } from '../components/ActivityFeed';
-import { ProgressBar } from '../../../../shared/components/ui/ProgressBar';
 import { Button } from '../../../../shared/components/ui/Button';
 import { Badge } from '../../../../shared/components/ui/Badge';
+import { ChibiMascot } from '../../../../shared/components/ui/ChibiMascot';
+import { ChibiCustomizerModal } from '../../../../shared/components/ui/ChibiCustomizerModal';
+import { UnifiedLearningPath } from '../../../../shared/components/ui/UnifiedLearningPath';
 import {
   Compass,
   FileQuestion,
@@ -13,176 +15,305 @@ import {
   ArrowRight,
   Sparkles,
   BookOpen,
-  CheckCircle2,
+  GraduationCap,
+  Baby,
+  Users,
+  Share2,
 } from 'lucide-react';
 import { useAuth } from '../../../../shared/hooks/useAuth';
+import { ChibiMascotConfig, EducationTier, PathCheckpoint } from '../../../../shared/types';
 
 export const StudentDashboard: React.FC = () => {
   const { user } = useAuth();
 
+  // Tier State: Switch between Kids (simpler, playful) and University (sophisticated, tutor-enabled)
+  const [tier, setTier] = useState<EducationTier>('university');
+
+  // Mascot State (stored in local state / customizer)
+  const [mascotCustomizerOpen, setMascotCustomizerOpen] = useState(false);
+  const [mascotConfig, setMascotConfig] = useState<ChibiMascotConfig>({
+    name: 'Mimi',
+    species: 'cat',
+    color: '#FFF2E2',
+    accessory: 'cap',
+    level: 3,
+    happiness: 95,
+  });
+
+  // University Course Checkpoints (Video -> AI Quiz -> AI Summary -> Assignment)
+  const universityCheckpoints: PathCheckpoint[] = [
+    {
+      id: 'cp-1',
+      order: 1,
+      type: 'video',
+      title: 'Lecture 1: Binary Search Trees & Tree Traversal (14 mins)',
+      duration: '14 mins',
+      status: 'completed',
+      points: 50,
+      tutorTip: 'Pay attention to in-order traversal; it yields sorted keys in O(n)!',
+    },
+    {
+      id: 'cp-2',
+      order: 2,
+      type: 'quiz',
+      title: 'Diagnostic Quiz: BST Properties & Search Complexity',
+      duration: '5 questions',
+      status: 'completed',
+      points: 75,
+      quizQuestions: [
+        {
+          id: 'q1',
+          question: 'What is the worst-case search time in an unbalanced Binary Search Tree?',
+          options: ['O(log n)', 'O(n)', 'O(1)', 'O(n²)'],
+          correctAnswer: 'O(n)',
+          explanation: 'When keys are inserted in sorted order, the BST degenerates into a linear linked list of height n.',
+        },
+        {
+          id: 'q2',
+          question: 'Which traversal prints elements of a BST in ascending order?',
+          options: ['Pre-order', 'In-order', 'Post-order', 'Level-order'],
+          correctAnswer: 'In-order',
+          explanation: 'In-order traversal visits Left, Root, Right, producing strictly non-decreasing sequence.',
+        },
+      ],
+      tutorTip: 'Remember edge cases where all elements are inserted in ascending order.',
+    },
+    {
+      id: 'cp-3',
+      order: 3,
+      type: 'summary',
+      title: 'AI High-Yield Summary & Mathematical Cheat-Sheet',
+      duration: '3 mins read',
+      status: 'current',
+      points: 40,
+      summaryContent:
+        '📌 BST Core Summary for CSE220 Midterms:\n\n' +
+        '• Height: h = floor(log2 n) for balanced; h = n-1 for degenerated.\n' +
+        '• Search/Insert/Delete: Best/Average = O(log n), Worst = O(n).\n' +
+        '• AVL Balance Factor: Height(Left) - Height(Right) ∈ {-1, 0, 1}.\n' +
+        '• Rotations: LL, RR (Single Rotation) | LR, RL (Double Rotation).',
+      tutorTip: 'Student Tutor Tanvir has verified these formula proofs for upcoming midterms.',
+    },
+    {
+      id: 'cp-4',
+      order: 4,
+      type: 'assignment',
+      title: 'Module Assignment 1: Balance Factor & Recurrence Proofs',
+      duration: 'Solve 3 Problems',
+      status: 'locked',
+      points: 100,
+      assignmentDetails: {
+        title: 'BST Rebalance Problem Set',
+        prompt:
+          '1. Draw the AVL tree resulting from inserting {15, 20, 24, 10, 13, 7, 30, 36}.\n' +
+          '2. State which rotations (LL/RR/LR/RL) occur.\n' +
+          '3. Compute balance factors at each node.',
+        dueDate: 'Sunday 11:59 PM',
+        submissionFormat: 'PDF or Typed Solution',
+      },
+      tutorTip: 'Peer notes for this problem set are available in the University Notes Exchange.',
+    },
+  ];
+
+  // Kids / Primary School Course Checkpoints (Simpler, Whimsical, Fun!)
+  const kidsCheckpoints: PathCheckpoint[] = [
+    {
+      id: 'k-1',
+      order: 1,
+      type: 'video',
+      title: 'Fun Cartoon Lesson: Meet the Number Forest! 🌳',
+      duration: '8 mins',
+      status: 'completed',
+      points: 30,
+      tutorTip: 'Watch the talking birds count apples on the tree!',
+    },
+    {
+      id: 'k-2',
+      order: 2,
+      type: 'quiz',
+      title: 'Star Quiz: Count & Multiply Apples! ⭐',
+      duration: '3 fun questions',
+      status: 'current',
+      points: 50,
+      quizQuestions: [
+        {
+          id: 'kq1',
+          question: 'If you have 4 baskets with 3 red apples in each, how many apples do you have? 🍎',
+          options: ['7 apples', '12 apples', '10 apples', '9 apples'],
+          correctAnswer: '12 apples',
+          explanation: 'Great job! 4 times 3 equals 12 juicy apples! 🎉',
+        },
+        {
+          id: 'kq2',
+          question: 'Which shape has 3 sides like a delicious slice of watermelon? 🍉',
+          options: ['Circle', 'Square', 'Triangle', 'Star'],
+          correctAnswer: 'Triangle',
+          explanation: 'Super! A triangle has 3 corners and 3 straight sides.',
+        },
+      ],
+      tutorTip: 'Ask your AI buddy Mimi if you need a hint!',
+    },
+    {
+      id: 'k-3',
+      order: 3,
+      type: 'summary',
+      title: 'Magic Flashcards: Today’s Big Discoveries! ✨',
+      duration: 'Quick Peek',
+      status: 'locked',
+      points: 40,
+      summaryContent: '🌟 Super Discoveries:\n• 4 × 3 = 12\n• Triangles have 3 sides\n• You are doing amazing!',
+    },
+    {
+      id: 'k-4',
+      order: 4,
+      type: 'assignment',
+      title: 'Fun Creative Activity: Draw Your Favorite Animal Counting Fruit! 🎨',
+      duration: 'Drawing fun',
+      status: 'locked',
+      points: 60,
+      assignmentDetails: {
+        title: 'Animal Count Picture',
+        prompt: 'Draw a picture of a friendly cat or bird with 5 pieces of fruit and show it to your teacher!',
+        dueDate: 'Anytime this week',
+        submissionFormat: 'Picture / Photo',
+      },
+    },
+  ];
+
+  const currentCheckpoints = tier === 'kids' ? kidsCheckpoints : universityCheckpoints;
+
   return (
     <div className="space-y-8">
-      {/* Welcome Banner with Glassmorphic Bengali Art Aesthetic */}
-      <div className="relative rounded-3xl overflow-hidden shadow-xl border border-white/70 glass-panel-elevated p-8 sm:p-10 nakshi-ribbon-bottom">
-        {/* Subtle decorative Alpona corner SVG */}
-        <div className="absolute -right-10 -bottom-10 w-48 h-48 opacity-15 pointer-events-none">
-          <svg viewBox="0 0 200 200" fill="none" stroke="#C84B31" strokeWidth="2">
-            <circle cx="100" cy="100" r="80" strokeDasharray="4 6" />
-            <circle cx="100" cy="100" r="50" stroke="#E8A317" />
-            <circle cx="100" cy="100" r="20" />
-          </svg>
-        </div>
+      {/* Top Banner with Adaptive Tier Switcher & Chibi Mascot Companion */}
+      <div className="glass-panel-elevated p-6 sm:p-8 rounded-3xl border border-white/80 shadow-md flex flex-col lg:flex-row lg:items-center justify-between gap-6 nakshi-ribbon-bottom">
+        <div className="max-w-2xl">
+          {/* Tier Switcher Controls */}
+          <div className="flex flex-wrap items-center gap-2 mb-3">
+            <span className="text-xs font-bold text-matti-light uppercase mr-1">Experience Mode:</span>
 
-        <div className="relative z-10 max-w-2xl">
-          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full glass-panel border border-turmeric/40 text-xs font-semibold text-terracotta mb-3 shadow-xs">
-            <Sparkles className="w-3.5 h-3.5 text-turmeric" />
-            <span>Welcome, {user?.name || 'Student'}</span>
+            <button
+              onClick={() => setTier('university')}
+              className={`flex items-center gap-1.5 px-3 py-1 rounded-xl text-xs font-bold transition-all ${
+                tier === 'university'
+                  ? 'bg-terracotta text-white shadow-xs'
+                  : 'glass-panel text-matti-light hover:text-matti'
+              }`}
+            >
+              <GraduationCap className="w-3.5 h-3.5" />
+              <span>University & College</span>
+            </button>
+
+            <button
+              onClick={() => setTier('kids')}
+              className={`flex items-center gap-1.5 px-3 py-1 rounded-xl text-xs font-bold transition-all ${
+                tier === 'kids'
+                  ? 'bg-gradient-to-r from-turmeric to-amber-500 text-matti font-extrabold shadow-xs'
+                  : 'glass-panel text-matti-light hover:text-matti'
+              }`}
+            >
+              <Baby className="w-3.5 h-3.5 text-turmeric-dark" />
+              <span>Kids & Primary School</span>
+            </button>
           </div>
 
           <h1 className="font-heading text-3xl sm:text-4xl font-bold text-matti leading-tight">
-            Restoring your learning momentum.
+            {tier === 'kids'
+              ? 'Hello Little Explorer! Ready for Fun Learning? 🎈'
+              : 'University Learning Recovery Hub'}
           </h1>
 
-          <p className="mt-2 text-matti-light text-sm font-sans leading-relaxed">
-            "মেঘ দেখে কেউ করিসনে ভয়, আড়ালে তার সূর্য হাসে।"
-            <span className="block text-xs text-terracotta/90 font-medium mt-1">
-              Do not fear the storm; your recovery pathway is actively closing knowledge gaps.
-            </span>
+          <p className="mt-1.5 text-xs sm:text-sm text-matti-light leading-relaxed">
+            {tier === 'kids'
+              ? 'Follow the colorful stepping stones below. Watch cartoons, answer easy star quizzes, and collect shiny gems!'
+              : 'Structured catch-up pathway for undergraduate coursework. Connect with Student Tutors and access request-verified peer notes.'}
           </p>
 
-          <div className="mt-6 flex flex-wrap gap-3.5">
-            <Link to="/student/recovery-plans">
-              <Button variant="primary" size="sm" className="shadow-md shadow-terracotta/20">
-                <span>Continue Catch-Up Path</span>
-                <ArrowRight className="w-4 h-4 ml-1.5" />
-              </Button>
-            </Link>
+          <div className="mt-4 flex flex-wrap items-center gap-3">
+            {tier === 'university' && (
+              <Link to="/university/notes">
+                <Button variant="secondary" size="sm" className="shadow-xs">
+                  <BookOpen className="w-4 h-4 mr-1.5 text-terracotta" />
+                  <span>Peer Note Exchange & Tutors</span>
+                </Button>
+              </Link>
+            )}
             <Link to="/student/absences">
-              <Button variant="outline" size="sm" className="glass-panel border-terracotta/30 text-matti hover:bg-white/70">
-                Log New Disruption
+              <Button variant="outline" size="sm" className="glass-panel text-xs">
+                <CalendarX className="w-3.5 h-3.5 mr-1 text-terracotta" />
+                <span>Log Disruption Period</span>
               </Button>
             </Link>
           </div>
         </div>
+
+        {/* Live Animated Kawaii Chibi Mascot Component */}
+        <div className="flex justify-end lg:justify-center">
+          <ChibiMascot
+            config={mascotConfig}
+            daysAway={4}
+            currentTopic={tier === 'kids' ? 'Number Forest & Multiplication' : 'BST Properties & AVL Balance'}
+            suggestedAction={
+              tier === 'kids'
+                ? 'Try the 2-minute Apple Star Quiz! ⭐'
+                : 'Checkpoint 3: Review AI High-Yield Formulas!'
+            }
+            onOpenCustomizer={() => setMascotCustomizerOpen(true)}
+            tier={tier}
+          />
+        </div>
       </div>
 
-      {/* Quick Stats Grid */}
+      {/* Quick Metrics */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
         <StatsCard
-          label="Identified Gaps"
-          value="3 Topics"
-          subtext="2 High severity"
+          label={tier === 'kids' ? 'Adventure Gems' : 'Syllabus Gaps'}
+          value={tier === 'kids' ? '120 ⭐' : '3 Topics'}
+          subtext={tier === 'kids' ? 'Level 3 Achiever!' : '2 High priority'}
           icon={CalendarX}
           variant="terracotta"
         />
         <StatsCard
-          label="Active Roadmap"
-          value="60%"
-          subtext="3 of 5 milestones reached"
+          label="Pathway Progress"
+          value="50%"
+          subtext="2 of 4 checkpoints complete"
           icon={Compass}
           variant="turmeric"
         />
         <StatsCard
-          label="Quizzes Mastered"
-          value="4 Quizzes"
-          subtext="Avg. 82% diagnostic score"
+          label={tier === 'kids' ? 'Fun Quizzes' : 'Diagnostic Score'}
+          value={tier === 'kids' ? '3 Passed 🎉' : '82% Avg'}
+          subtext="Ready for upcoming milestones"
           icon={FileQuestion}
           variant="river"
         />
         <StatsCard
-          label="Recovery Streak"
+          label="Learning Streak"
           value="5 Days"
-          subtext="Continuous momentum"
+          subtext="Recovery momentum strong!"
           icon={Flame}
           variant="lotus"
         />
       </div>
 
-      {/* Active Recovery Plan Card & Activity Feed */}
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-        {/* Left 2 Cols: Active Plan Highlight */}
-        <div className="lg:col-span-2 glass-panel-elevated border border-white/80 rounded-3xl p-7 sm:p-9 shadow-lg flex flex-col justify-between">
-          <div>
-            <div className="flex items-center justify-between mb-4">
-              <Badge variant="success" size="sm">
-                APPROVED BY FACULTY
-              </Badge>
-              <span className="text-xs text-matti-light font-medium">Target Completion: Nov 25</span>
-            </div>
+      {/* THE DRAWN UNIFIED LEARNING PATH */}
+      <UnifiedLearningPath
+        courseName={
+          tier === 'kids'
+            ? 'Fun Primary Mathematics & Nature Science'
+            : 'Data Structures & Recurrence Relations'
+        }
+        courseCode={tier === 'kids' ? 'KIDS-M1' : 'CSE220'}
+        tier={tier}
+        checkpoints={currentCheckpoints}
+      />
 
-            <h3 className="font-heading text-2xl font-bold text-matti mb-1">
-              Monsoon Catch-Up Pathway
-            </h3>
-            <p className="text-xs text-matti-light mb-6">
-              Sequenced remedial learning bridging 4 school days missed in Sylhet.
-            </p>
-
-            <ProgressBar
-              progress={60}
-              label="Overall Pathway Progress"
-              color="terracotta"
-              height="lg"
-            />
-
-            <div className="mt-6 grid grid-cols-1 sm:grid-cols-2 gap-4">
-              <div className="glass-panel p-4 rounded-2xl border border-white/70 shadow-xs">
-                <span className="text-[11px] font-bold text-terracotta uppercase tracking-wider">Current Focus:</span>
-                <p className="font-heading font-bold text-sm text-matti mt-1">
-                  Periodic Trends & Valency
-                </p>
-                <p className="text-xs text-matti-light mt-0.5">Est. 2 hours remaining</p>
-              </div>
-
-              <div className="glass-panel p-4 rounded-2xl border border-white/70 shadow-xs">
-                <span className="text-[11px] font-bold text-turmeric-dark uppercase tracking-wider">Upcoming Milestone:</span>
-                <p className="font-heading font-bold text-sm text-matti mt-1">
-                  Photosynthesis Reaction Cycles
-                </p>
-                <p className="text-xs text-matti-light mt-0.5">Peer notes available in library</p>
-              </div>
-            </div>
-          </div>
-
-          <div className="mt-8 pt-6 border-t border-parchment-dark/50 flex justify-end">
-            <Link to="/student/recovery-plans/plan-nov-2026">
-              <Button variant="primary" size="md" className="shadow-md shadow-terracotta/20">
-                <span>Enter Interactive Journey</span>
-                <ArrowRight className="w-4 h-4 ml-2" />
-              </Button>
-            </Link>
-          </div>
-        </div>
-
-        {/* Right 1 Col: Activity Feed */}
-        <ActivityFeed
-          items={[
-            {
-              id: 'a1',
-              title: 'Mastered Newtonian Laws milestone',
-              timestamp: '2 hours ago',
-              type: 'milestone',
-            },
-            {
-              id: 'a2',
-              title: 'Completed Physics diagnostic quiz (80%)',
-              timestamp: 'Yesterday',
-              type: 'quiz',
-            },
-            {
-              id: 'a3',
-              title: 'Faculty approved your Catch-Up plan',
-              timestamp: '2 days ago',
-              type: 'plan',
-            },
-            {
-              id: 'a4',
-              title: 'Recorded 3 days absence due to flood',
-              timestamp: '4 days ago',
-              type: 'absence',
-            },
-          ]}
-        />
-      </div>
+      {/* Mascot Customizer Modal */}
+      <ChibiCustomizerModal
+        isOpen={mascotCustomizerOpen}
+        onClose={() => setMascotCustomizerOpen(false)}
+        currentConfig={mascotConfig}
+        onSave={(newCfg) => setMascotConfig(newCfg)}
+      />
     </div>
   );
 };

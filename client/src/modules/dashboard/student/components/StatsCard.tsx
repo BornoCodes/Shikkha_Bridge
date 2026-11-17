@@ -17,26 +17,26 @@ export const StatsCard: React.FC<StatsCardProps> = ({
   variant = 'terracotta',
 }) => {
   const colorMap = {
-    terracotta: 'text-terracotta bg-terracotta/10 border-terracotta/20',
-    turmeric: 'text-turmeric-dark bg-turmeric/15 border-turmeric/20',
-    river: 'text-river bg-river/15 border-river/20',
-    lotus: 'text-lotus bg-lotus/15 border-lotus/20',
+    terracotta: 'text-terracotta bg-terracotta/10 border-terracotta/25',
+    turmeric: 'text-turmeric-dark bg-turmeric/15 border-turmeric/30',
+    river: 'text-river bg-river/15 border-river/30',
+    lotus: 'text-lotus-dark bg-lotus/15 border-lotus/30',
   };
 
   return (
-    <div className="bg-cream border border-parchment-dark rounded-3xl p-6 shadow-xs flex items-center justify-between">
+    <div className="glass-panel-elevated rounded-3xl p-6 shadow-sm border border-white/80 flex items-center justify-between hover:-translate-y-0.5 transition-all">
       <div>
-        <p className="text-xs font-semibold text-matti-light uppercase tracking-wider">
+        <p className="text-[11px] font-bold text-matti-light/90 uppercase tracking-wider">
           {label}
         </p>
-        <p className="font-heading text-3xl font-extrabold text-matti mt-1">
+        <p className="font-heading text-3xl font-extrabold text-matti mt-1.5">
           {value}
         </p>
-        {subtext && <p className="text-xs text-matti-light mt-1">{subtext}</p>}
+        {subtext && <p className="text-xs text-matti-light mt-1 font-medium">{subtext}</p>}
       </div>
 
-      <div className={`w-14 h-14 rounded-2xl border flex items-center justify-center ${colorMap[variant]}`}>
-        <Icon className="w-7 h-7" />
+      <div className={`w-14 h-14 rounded-2xl border flex items-center justify-center shadow-xs ${colorMap[variant]}`}>
+        <Icon className="w-6 h-6" />
       </div>
     </div>
   );

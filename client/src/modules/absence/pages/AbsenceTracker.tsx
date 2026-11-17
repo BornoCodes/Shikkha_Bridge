@@ -5,7 +5,7 @@ import { Button } from '../../../shared/components/ui/Button';
 import { Modal } from '../../../shared/components/ui/Modal';
 import { Input } from '../../../shared/components/ui/Input';
 import { toast } from 'react-hot-toast';
-import { Plus, ShieldAlert, Sparkles } from 'lucide-react';
+import { Plus, ShieldAlert, Sparkles, Filter } from 'lucide-react';
 import { Link } from 'react-router-dom';
 
 export const AbsenceTracker: React.FC = () => {
@@ -58,13 +58,17 @@ export const AbsenceTracker: React.FC = () => {
   return (
     <div className="space-y-8">
       {/* Header */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+      <div className="glass-panel-elevated p-8 rounded-3xl border border-white/80 shadow-md flex flex-col sm:flex-row sm:items-center justify-between gap-5 nakshi-ribbon-bottom">
         <div>
-          <h1 className="font-heading text-3xl font-bold text-matti">
-            Disruption & Absence Analytics
+          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full glass-panel text-[11px] font-bold text-terracotta mb-2 border border-terracotta/20">
+            <ShieldAlert className="w-3.5 h-3.5" />
+            <span>Curriculum Deficit Analytics</span>
+          </div>
+          <h1 className="font-heading text-3xl sm:text-4xl font-bold text-matti">
+            Disruption & Gap Engine
           </h1>
           <p className="text-sm text-matti-light mt-1">
-            Tracking missed school days and pinpointing exact syllabus gaps.
+            Tracking missed school days and pinpointing exact curriculum loss for accelerated catch-up.
           </p>
         </div>
 
@@ -72,7 +76,7 @@ export const AbsenceTracker: React.FC = () => {
           onClick={() => setModalOpen(true)}
           variant="primary"
           size="md"
-          className="self-start sm:self-auto"
+          className="self-start sm:self-auto shadow-md shadow-terracotta/20"
         >
           <Plus className="w-4 h-4 mr-2" />
           Log Disrupted Absence
@@ -83,24 +87,26 @@ export const AbsenceTracker: React.FC = () => {
       <AbsenceCalendar absences={absences} />
 
       {/* Gap Analysis Summary */}
-      <div>
-        <div className="flex items-center justify-between mb-4">
+      <div className="space-y-5">
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
           <div>
-            <h2 className="font-heading text-xl font-bold text-matti flex items-center gap-2">
-              <ShieldAlert className="w-5 h-5 text-terracotta" />
-              Detected Knowledge Gaps ({gaps.length})
+            <h2 className="font-heading text-2xl font-bold text-matti flex items-center gap-2.5">
+              <span>Detected Knowledge Gaps</span>
+              <span className="text-xs px-2.5 py-0.5 rounded-full bg-terracotta/10 text-terracotta font-bold border border-terracotta/20">
+                {gaps.length} Topics
+              </span>
             </h2>
-            <p className="text-xs text-matti-light">
-              Topics missed during school closures mapped automatically to the curriculum.
+            <p className="text-xs text-matti-light mt-0.5">
+              Curriculum dependencies flagged during recent school closure dates.
             </p>
           </div>
 
           <Link
             to="/student/recovery-plans"
-            className="text-xs font-semibold text-terracotta hover:underline inline-flex items-center gap-1"
+            className="text-xs font-bold text-terracotta hover:underline inline-flex items-center gap-1.5 self-start"
           >
             <Sparkles className="w-3.5 h-3.5 text-turmeric" />
-            <span>Generate Recovery Plan</span>
+            <span>Launch AI Recovery Pathway</span>
           </Link>
         </div>
 
@@ -127,30 +133,30 @@ export const AbsenceTracker: React.FC = () => {
           />
 
           <div>
-            <label className="block text-xs font-semibold text-matti mb-1">
-              Disruption Cause / Reason
+            <label className="block text-xs font-semibold text-matti mb-1.5">
+              Disruption Cause / Category
             </label>
             <select
               value={reason}
               onChange={(e) => setReason(e.target.value)}
-              className="w-full px-3.5 py-2.5 rounded-xl border border-parchment-dark bg-cream text-matti text-sm focus:outline-none focus:ring-2 focus:ring-terracotta/40"
+              className="w-full px-4 py-2.5 rounded-xl border border-parchment-dark bg-white/80 text-matti text-sm focus:outline-none focus:ring-2 focus:ring-terracotta/30"
             >
-              <option value="flood">Flood / Monsoon Inundation (বন্যা)</option>
-              <option value="cyclone">Cyclone / Severe Weather</option>
-              <option value="illness">Illness / Dengue / Medical Recovery</option>
+              <option value="flood">Monsoon Flood / Inundation (বন্যা)</option>
+              <option value="cyclone">Cyclone / Severe Weather Closure</option>
+              <option value="illness">Illness / Medical Leave</option>
               <option value="family">Family Crisis</option>
-              <option value="other">Other School Closure</option>
+              <option value="other">Institutional Closure</option>
             </select>
           </div>
 
           <Input
-            label="Additional Notes"
-            placeholder="e.g. Roads flooded, school boat cancelled for 3 days"
+            label="Contextual Description"
+            placeholder="e.g. Inundated access roads, school suspended for 3 days"
             value={notes}
             onChange={(e) => setNotes(e.target.value)}
           />
 
-          <Button type="submit" variant="primary" size="md" className="w-full mt-2">
+          <Button type="submit" variant="primary" size="md" className="w-full mt-3 shadow-md shadow-terracotta/20">
             Map to Curriculum & Detect Gaps
           </Button>
         </form>

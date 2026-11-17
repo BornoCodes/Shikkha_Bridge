@@ -4,7 +4,8 @@ import { toast } from 'react-hot-toast';
 import { authService } from '../services/auth.service';
 import { Button } from '../../../shared/components/ui/Button';
 import { Input } from '../../../shared/components/ui/Input';
-import { GraduationCap, Users } from 'lucide-react';
+import { BengaliArtBackground } from '../../../shared/components/ui/BengaliArtBackground';
+import { GraduationCap, Users, ArrowLeft } from 'lucide-react';
 
 export const RegisterPage: React.FC = () => {
   const navigate = useNavigate();
@@ -36,7 +37,7 @@ export const RegisterPage: React.FC = () => {
       toast.success('Registration successful! Welcome to ShikkhaBridge.');
       navigate(role === 'teacher' ? '/teacher/dashboard' : '/student/dashboard');
     } catch {
-      // Mock registration for quick demo
+      // Mock registration for demo
       const mockUser = {
         id: 'usr-new',
         name,
@@ -56,14 +57,24 @@ export const RegisterPage: React.FC = () => {
   };
 
   return (
-    <div className="min-h-screen bg-cream flex items-center justify-center p-4">
-      <div className="w-full max-w-2xl bg-cream border border-parchment-dark rounded-3xl shadow-xl p-8 sm:p-10">
-        <div className="text-center mb-8">
-          <div className="w-12 h-12 rounded-2xl bg-terracotta text-white flex items-center justify-center mx-auto mb-3 font-bengali text-2xl font-bold">
+    <div className="min-h-screen relative flex items-center justify-center p-4 selection:bg-terracotta selection:text-white">
+      {/* Animated Traditional Bengali Art Background */}
+      <BengaliArtBackground />
+
+      <div className="relative z-10 w-full max-w-2xl glass-panel-elevated rounded-3xl shadow-2xl p-8 sm:p-10 border border-white/80 nakshi-ribbon-top">
+        <div className="flex items-center justify-between mb-6">
+          <Link to="/" className="inline-flex items-center gap-2 text-xs font-semibold text-matti-light hover:text-terracotta transition-colors">
+            <ArrowLeft className="w-4 h-4" />
+            <span>Return to Home</span>
+          </Link>
+          <div className="w-9 h-9 rounded-xl bg-terracotta text-white flex items-center justify-center font-bengali text-lg font-bold">
             সে
           </div>
-          <h2 className="font-heading text-3xl font-bold text-matti">Join ShikkhaBridge</h2>
-          <p className="text-sm text-matti-light mt-1">
+        </div>
+
+        <div className="text-center mb-7">
+          <h2 className="font-heading text-3xl font-bold text-matti">Create Your Account</h2>
+          <p className="text-xs text-matti-light mt-1">
             Choose your learning role and build your catch-up pathway.
           </p>
         </div>
@@ -75,8 +86,8 @@ export const RegisterPage: React.FC = () => {
             onClick={() => setRole('student')}
             className={`p-4 rounded-2xl border-2 flex flex-col items-center gap-2 transition-all ${
               role === 'student'
-                ? 'border-terracotta bg-terracotta/5 shadow-xs'
-                : 'border-parchment-dark bg-parchment/40 hover:border-terracotta/40'
+                ? 'border-terracotta bg-terracotta/10 shadow-xs'
+                : 'border-white/70 glass-panel hover:border-terracotta/40'
             }`}
           >
             <GraduationCap className={`w-7 h-7 ${role === 'student' ? 'text-terracotta' : 'text-matti-light'}`} />
@@ -91,13 +102,13 @@ export const RegisterPage: React.FC = () => {
             onClick={() => setRole('teacher')}
             className={`p-4 rounded-2xl border-2 flex flex-col items-center gap-2 transition-all ${
               role === 'teacher'
-                ? 'border-terracotta bg-terracotta/5 shadow-xs'
-                : 'border-parchment-dark bg-parchment/40 hover:border-terracotta/40'
+                ? 'border-terracotta bg-terracotta/10 shadow-xs'
+                : 'border-white/70 glass-panel hover:border-terracotta/40'
             }`}
           >
             <Users className={`w-7 h-7 ${role === 'teacher' ? 'text-terracotta' : 'text-matti-light'}`} />
             <div className="text-center">
-              <div className="font-heading font-bold text-sm text-matti">Teacher</div>
+              <div className="font-heading font-bold text-sm text-matti">Faculty / Teacher</div>
               <div className="text-[11px] text-matti-light">Review & approve recovery</div>
             </div>
           </button>
@@ -141,11 +152,11 @@ export const RegisterPage: React.FC = () => {
 
             {role === 'student' && (
               <div>
-                <label className="block text-xs font-semibold text-matti mb-1">Grade / Class</label>
+                <label className="block text-xs font-semibold text-matti mb-1.5">Grade / Class</label>
                 <select
                   value={studentClass}
                   onChange={(e) => setStudentClass(e.target.value)}
-                  className="w-full px-3.5 py-2.5 rounded-xl border border-parchment-dark bg-cream text-matti text-sm focus:outline-none focus:ring-2 focus:ring-terracotta/40"
+                  className="w-full px-4 py-2.5 rounded-xl border border-parchment-dark bg-white/80 text-matti text-sm focus:outline-none focus:ring-2 focus:ring-terracotta/30"
                 >
                   <option value="Class 8">Class 8</option>
                   <option value="Class 9">Class 9 (SSC)</option>
@@ -161,17 +172,17 @@ export const RegisterPage: React.FC = () => {
             type="submit"
             variant="primary"
             size="lg"
-            className="w-full mt-4"
+            className="w-full mt-4 shadow-md shadow-terracotta/20"
             disabled={loading}
           >
-            {loading ? 'Setting up Profile...' : 'Complete Registration'}
+            {loading ? 'Creating Profile...' : 'Complete Registration'}
           </Button>
         </form>
 
         <div className="mt-6 text-center text-xs text-matti-light">
           Already have an account?{' '}
-          <Link to="/login" className="font-semibold text-terracotta hover:underline">
-            Sign in
+          <Link to="/login" className="font-bold text-terracotta hover:underline">
+            Sign In
           </Link>
         </div>
       </div>

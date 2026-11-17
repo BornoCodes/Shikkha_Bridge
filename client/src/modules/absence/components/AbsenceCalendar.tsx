@@ -27,25 +27,30 @@ export const AbsenceCalendar: React.FC<AbsenceCalendarProps> = ({ absences }) =>
   });
 
   return (
-    <div className="bg-cream border border-parchment-dark rounded-2xl p-6 shadow-xs">
-      <div className="flex items-center justify-between mb-4">
-        <div className="flex items-center gap-2">
-          <CalendarIcon className="w-5 h-5 text-terracotta" />
-          <h3 className="font-heading font-bold text-matti">November 2026 Attendance</h3>
+    <div className="glass-panel-elevated border border-white/80 rounded-3xl p-7 shadow-sm">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 mb-6">
+        <div className="flex items-center gap-2.5">
+          <div className="p-2 rounded-xl bg-terracotta/10 text-terracotta">
+            <CalendarIcon className="w-5 h-5" />
+          </div>
+          <div>
+            <h3 className="font-heading font-bold text-lg text-matti">November 2026 Disruption Log</h3>
+            <p className="text-xs text-matti-light">Attendance records correlated with syllabus schedule</p>
+          </div>
         </div>
-        <div className="flex items-center gap-4 text-xs">
+        <div className="flex items-center gap-4 text-xs font-medium">
           <div className="flex items-center gap-1.5">
-            <span className="w-3 h-3 rounded-full bg-emerald-400" />
-            <span className="text-matti-light">Present</span>
+            <span className="w-2.5 h-2.5 rounded-full bg-emerald-500" />
+            <span className="text-matti-light">Session Held</span>
           </div>
           <div className="flex items-center gap-1.5">
-            <span className="w-3 h-3 rounded-full bg-rose-500" />
-            <span className="text-matti-light">Disrupted / Absent</span>
+            <span className="w-2.5 h-2.5 rounded-full bg-rose-500 animate-pulse" />
+            <span className="text-rose-700 font-semibold">Disruption (Gap Flagged)</span>
           </div>
         </div>
       </div>
 
-      <div className="grid grid-cols-7 gap-2 text-center text-xs font-semibold text-matti-light mb-2">
+      <div className="grid grid-cols-7 gap-2.5 text-center text-xs font-bold text-matti-light uppercase tracking-wider mb-3">
         <span>Sun</span>
         <span>Mon</span>
         <span>Tue</span>
@@ -55,14 +60,14 @@ export const AbsenceCalendar: React.FC<AbsenceCalendarProps> = ({ absences }) =>
         <span>Sat</span>
       </div>
 
-      <div className="grid grid-cols-7 gap-2">
+      <div className="grid grid-cols-7 gap-2.5">
         {days.map((d) => (
           <div
             key={d.day}
-            className={`h-11 rounded-xl flex flex-col items-center justify-center text-xs font-medium transition-all ${
+            className={`h-12 rounded-2xl flex flex-col items-center justify-center text-xs font-semibold transition-all ${
               d.isAbsent
-                ? 'bg-rose-100 text-rose-800 border border-rose-300 font-bold shadow-xs'
-                : 'bg-parchment text-matti hover:bg-parchment-dark'
+                ? 'bg-rose-500/10 text-rose-800 border-2 border-rose-400/40 shadow-xs'
+                : 'glass-panel text-matti hover:bg-white/80 border border-white/60'
             }`}
           >
             <span>{d.day}</span>

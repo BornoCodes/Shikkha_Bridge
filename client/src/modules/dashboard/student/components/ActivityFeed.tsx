@@ -23,15 +23,18 @@ export const ActivityFeed: React.FC<{ items: ActivityItem[] }> = ({ items }) => 
   };
 
   return (
-    <div className="bg-cream border border-parchment-dark rounded-3xl p-6 shadow-xs">
-      <h3 className="font-heading font-bold text-lg text-matti mb-4">
-        Recent Recovery Activity
-      </h3>
+    <div className="glass-panel-elevated rounded-3xl p-6 sm:p-7 shadow-sm border border-white/80">
+      <div className="flex items-center justify-between mb-5">
+        <h3 className="font-heading font-bold text-lg text-matti">
+          Recent Activity
+        </h3>
+        <span className="w-2 h-2 rounded-full bg-emerald-500" />
+      </div>
 
       <div className="space-y-4">
         {items.map((act) => (
-          <div key={act.id} className="flex items-start gap-3 pb-3 border-b border-parchment-dark last:border-0 last:pb-0">
-            <div className="p-2 rounded-xl bg-parchment shrink-0 mt-0.5">
+          <div key={act.id} className="flex items-start gap-3.5 pb-3.5 border-b border-parchment-dark/50 last:border-0 last:pb-0">
+            <div className="p-2.5 rounded-xl glass-panel border border-white/70 shrink-0 mt-0.5">
               {getIcon(act.type)}
             </div>
             <div className="flex-1">

@@ -75,9 +75,26 @@ export const DEFAULT_AVATAR: AvatarConfig = {
   outfit: 'saree',
   primary: '#FFFDF8',
   trim: '#C84B31',
-  accessories: ['bindi', 'jhumka'],
+  accessories: ['jhumka'],
   backdrop: 'alpona',
   face: 'smile',
+};
+
+export const DEFAULT_MALE_AVATAR: AvatarConfig = {
+  nickname: '',
+  skin: SKIN_TONES[1],
+  hairColor: HAIR_COLORS[0],
+  hair: 'short',
+  outfit: 'panjabi',
+  primary: '#FFFDF8',
+  trim: '#C84B31',
+  accessories: ['gamcha'],
+  backdrop: 'alpona',
+  face: 'smile',
+};
+
+export const DEFAULT_FEMALE_AVATAR: AvatarConfig = {
+  ...DEFAULT_AVATAR,
 };
 
 const pick = <T extends string>(value: unknown, allowed: readonly T[], fallback: T): T =>
@@ -108,7 +125,15 @@ export function sanitizeAvatar(raw: unknown): AvatarConfig {
 
 /** The signed-in user's character, saved in this browser. */
 export function useAvatar(userId?: string): [AvatarConfig, (next: AvatarConfig | ((p: AvatarConfig) => AvatarConfig)) => void] {
-  const [raw, setRaw] = useLocalStore<AvatarConfig>(`shikkha_avatar_${userId ?? 'guest'}`, DEFAULT_AVATAR);
+  const defaultVal = useMemo(() => {
+    try {
+      const storedGender = typeof window !== 'undefined' ? localStorage.getItem('shikkha_gender_pref') : null;
+      return storedGender === 'male' ? DEFAULT_MALE_AVATAR : DEFAULT_FEMALE_AVATAR;
+    } catch {
+      return DEFAULT_FEMALE_AVATAR;
+    }
+  }, []);
+  const [raw, setRaw] = useLocalStore<AvatarConfig>(`shikkha_avatar_${userId ?? 'guest'}`, defaultVal);
   const config = useMemo(() => sanitizeAvatar(raw), [raw]);
   return [config, setRaw];
 }

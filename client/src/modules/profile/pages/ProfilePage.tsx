@@ -8,6 +8,8 @@ import {
   BACKDROP_OPTIONS,
   COLOR_CHOICES,
   DEFAULT_AVATAR,
+  DEFAULT_MALE_AVATAR,
+  DEFAULT_FEMALE_AVATAR,
   FACE_OPTIONS,
   HAIR_COLORS,
   HAIR_OPTIONS,
@@ -86,6 +88,24 @@ export const ProfilePage: React.FC = () => {
     patch({ accessories: avatar.accessories.includes(a) ? avatar.accessories.filter((x) => x !== a) : [...avatar.accessories, a] });
   const patchMascot = (p: Partial<typeof mascot>) => setMascot({ ...mascot, ...p });
 
+  const setMalePreset = () => {
+    localStorage.setItem('shikkha_gender_pref', 'male');
+    setAvatar((prev) => ({
+      ...DEFAULT_MALE_AVATAR,
+      nickname: prev.nickname,
+      skin: prev.skin,
+    }));
+  };
+
+  const setFemalePreset = () => {
+    localStorage.setItem('shikkha_gender_pref', 'female');
+    setAvatar((prev) => ({
+      ...DEFAULT_FEMALE_AVATAR,
+      nickname: prev.nickname,
+      skin: prev.skin,
+    }));
+  };
+
   const handleLogout = () => {
     logout();
     navigate('/login');
@@ -100,6 +120,33 @@ export const ProfilePage: React.FC = () => {
         <div className="md:sticky md:top-28">
           <div className="paper rounded-2xl p-5 text-center">
             <BengaliAvatar config={avatar} size={200} className="mx-auto" title="Your character" />
+            
+            {/* Quick character style / gender selector */}
+            <div className="mt-4 flex items-center justify-center gap-2">
+              <button
+                type="button"
+                onClick={setFemalePreset}
+                className={`px-3 py-1.5 rounded-full text-xs font-semibold flex items-center gap-1.5 border transition-all ${
+                  avatar.hair === 'braids' || avatar.outfit === 'saree'
+                    ? 'bg-[#C84B31] text-white border-[#C84B31] shadow-sm'
+                    : 'bg-white/80 text-[#6B5344] border-[#EAD5BC] hover:border-[#C84B31]'
+                }`}
+              >
+                <span>👩</span> Female / কন্যা
+              </button>
+              <button
+                type="button"
+                onClick={setMalePreset}
+                className={`px-3 py-1.5 rounded-full text-xs font-semibold flex items-center gap-1.5 border transition-all ${
+                  avatar.hair === 'short' && (avatar.outfit === 'panjabi' || avatar.outfit === 'baul' || avatar.outfit === 'uniform')
+                    ? 'bg-[#C84B31] text-white border-[#C84B31] shadow-sm'
+                    : 'bg-white/80 text-[#6B5344] border-[#EAD5BC] hover:border-[#C84B31]'
+                }`}
+              >
+                <span>👨</span> Male / ছেলে
+              </button>
+            </div>
+
             <label className="block mt-4 text-left text-xs font-semibold text-[#2D1B0E]" htmlFor="nick">Nickname</label>
             <input
               id="nick"
@@ -109,7 +156,7 @@ export const ProfilePage: React.FC = () => {
               className="mt-1 w-full px-3 py-2 rounded-lg border border-[#EAD5BC] bg-white/80 text-[#2D1B0E] focus:outline-none focus:ring-2 focus:ring-[#C84B31]/30"
             />
             <button type="button" onClick={() => setAvatar({ ...DEFAULT_AVATAR })} className="mt-3 text-xs text-[#6B5344] hover:text-[#C84B31] underline">
-              Start again
+              Reset character
             </button>
           </div>
         </div>

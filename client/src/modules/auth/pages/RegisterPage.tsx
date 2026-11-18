@@ -7,10 +7,12 @@ import { Input } from '../../../shared/components/ui/Input';
 import { Logo } from '../../../shared/components/ui/Logo';
 import { KanthaBorder } from '../../../shared/art/KanthaBorder';
 import { GraduationCap, Users } from 'lucide-react';
+import { DEFAULT_FEMALE_AVATAR, DEFAULT_MALE_AVATAR } from '../../../shared/avatar/avatarConfig';
 
 export const RegisterPage: React.FC = () => {
   const navigate = useNavigate();
   const [role, setRole] = useState<'student' | 'teacher'>('student');
+  const [gender, setGender] = useState<'male' | 'female'>('female');
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
@@ -26,8 +28,16 @@ export const RegisterPage: React.FC = () => {
     }
 
     setLoading(true);
+    // Persist gender and initialize avatar
     try {
-      await authService.register({
+      localStorage.setItem('shikkha_gender_pref', gender);
+      const chosenAvatar = gender === 'male' ? DEFAULT_MALE_AVATAR : DEFAULT_FEMALE_AVATAR;
+      localStorage.setItem('shikkha_avatar_guest', JSON.stringify({ ...chosenAvatar, nickname: name.split(' ')[0] || '' }));
+    } catch {
+      // ignore
+    }
+    try {
+      const res = await authService.register({
         name,
         email,
         password,
@@ -35,6 +45,11 @@ export const RegisterPage: React.FC = () => {
         school,
         class: role === 'student' ? studentClass : undefined,
       });
+      const registeredUser = res.data?.user;
+      if (registeredUser?.id) {
+        const chosenAvatar = gender === 'male' ? DEFAULT_MALE_AVATAR : DEFAULT_FEMALE_AVATAR;
+        localStorage.setItem(`shikkha_avatar_${registeredUser.id}`, JSON.stringify({ ...chosenAvatar, nickname: name.split(' ')[0] || '' }));
+      }
       toast.success('Registration successful! Welcome to ShikkhaBridge.');
       navigate(role === 'teacher' ? '/teacher/dashboard' : '/student/dashboard');
     } catch {
@@ -46,10 +61,13 @@ export const RegisterPage: React.FC = () => {
         role,
         school,
         class: studentClass,
+        gender,
         createdAt: new Date().toISOString(),
       };
       localStorage.setItem('shikkha_token', 'mock-token-demo');
       localStorage.setItem('shikkha_user', JSON.stringify(mockUser));
+      const chosenAvatar = gender === 'male' ? DEFAULT_MALE_AVATAR : DEFAULT_FEMALE_AVATAR;
+      localStorage.setItem(`shikkha_avatar_${mockUser.id}`, JSON.stringify({ ...chosenAvatar, nickname: name.split(' ')[0] || '' }));
       toast.success('Account created! Welcome to ShikkhaBridge.');
       navigate(role === 'teacher' ? '/teacher/dashboard' : '/student/dashboard');
     } finally {
@@ -86,6 +104,35 @@ export const RegisterPage: React.FC = () => {
         <div className="grid grid-cols-2 gap-3 mb-5">
           {roleBtn('student', GraduationCap, 'Student', 'I want to catch up')}
           {roleBtn('teacher', Users, 'Teacher', 'I approve plans')}
+        </div>
+
+        {/* Character Gender Selection */}
+        <div className="mb-5">
+          <label className="block text-xs font-semibold text-[#2D1B0E] mb-1.5">Avatar / চরিত্র নির্বাচন</label>
+          <div className="grid grid-cols-2 gap-3">
+            <button
+              type="button"
+              onClick={() => setGender('female')}
+              className={`p-3 rounded-xl border text-sm font-medium flex items-center justify-center gap-2 transition-all ${
+                gender === 'female'
+                  ? 'bg-[#C84B31]/10 border-[#C84B31] text-[#C84B31] font-semibold'
+                  : 'bg-white/70 border-[#EAD5BC] text-[#6B5344] hover:border-[#C84B31]/60'
+              }`}
+            >
+              <span className="text-xl">👩</span> Female / কন্যা
+            </button>
+            <button
+              type="button"
+              onClick={() => setGender('male')}
+              className={`p-3 rounded-xl border text-sm font-medium flex items-center justify-center gap-2 transition-all ${
+                gender === 'male'
+                  ? 'bg-[#C84B31]/10 border-[#C84B31] text-[#C84B31] font-semibold'
+                  : 'bg-white/70 border-[#EAD5BC] text-[#6B5344] hover:border-[#C84B31]/60'
+              }`}
+            >
+              <span className="text-xl">👨</span> Male / ছেলে
+            </button>
+          </div>
         </div>
 
         <form onSubmit={handleSubmit} className="space-y-4">

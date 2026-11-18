@@ -31,7 +31,7 @@ export const StudentDashboard: React.FC = () => {
 
   return (
     <div>
-      <PageHeader bn={`নমস্কার, ${first}`} title={`Hello, ${first}`} sub="Here is the one thing to do next." />
+      <PageHeader bn={`স্বাগতম, ${first}`} title={`Hello, ${first}`} sub="Here is the one thing to do next." />
 
       <section className="paper relative rounded-2xl p-6 sm:p-8 overflow-hidden">
         <Kolka size={64} className="absolute right-5 top-5 opacity-25" />

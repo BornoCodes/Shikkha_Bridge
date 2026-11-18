@@ -172,7 +172,7 @@ const INTENT_WORDS = {
   next: ['start', 'begin', 'study', 'learn', 'lesson', 'lessons', 'next', 'porbo', 'পড়ব', 'পড়া', 'শুরু'],
   today: ['today', 'agenda', 'routine'],
   lost: ['lost', 'confused', 'help', 'stuck', 'where', 'find', 'looking', 'হারিয়ে'],
-  hello: ['hi', 'hello', 'hey', 'hola', 'salam', 'assalamu', 'nomoshkar', 'নমস্কার', 'সালাম'],
+  hello: ['hi', 'hello', 'hey', 'hola', 'salam', 'assalamu', 'সালাম', 'স্বাগতম'],
   thanks: ['thanks', 'thank', 'thx', 'shukriya', 'ধন্যবাদ'],
   bye: ['bye', 'goodbye', 'later'],
   what: ['can', 'do'],

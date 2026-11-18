@@ -94,8 +94,9 @@ export default {
       },
       fontFamily: {
         bengali: ['"Hind Siliguri"', "sans-serif"],
-        heading: ['"Playfair Display"', "serif"],
-        body: ['"Inter"', "sans-serif"],
+        heading: ['"Tiro Bangla"', '"Playfair Display"', "serif"],
+        body: ['"Hind Siliguri"', '"Inter"', "sans-serif"],
+        pixel: ['"Press Start 2P"', '"Hind Siliguri"', "monospace"],
       },
       backgroundImage: {
         "kantha-border":

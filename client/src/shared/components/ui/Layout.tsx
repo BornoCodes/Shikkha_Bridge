@@ -1,24 +1,29 @@
 import React from 'react';
-import { Outlet } from 'react-router-dom';
+import { Navigate, useLocation } from 'react-router-dom';
+import { useAuth } from '../../hooks/useAuth';
+import { Guide, GuideProvider } from '../../guide';
 import { Navbar } from './Navbar';
-import { Sidebar } from './Sidebar';
-import { BengaliArtBackground } from './BengaliArtBackground';
+import { PageTransition } from './PageTransition';
 
+/**
+ * The signed-in app: a slim top bar, the page (with its transition) and the
+ * Chibi guide wandering along the bottom. Signed-out visitors go to log in.
+ */
 export const Layout: React.FC = () => {
+  const { isAuthenticated } = useAuth();
+  const location = useLocation();
+
+  if (!isAuthenticated) return <Navigate to="/login" replace state={{ from: location.pathname }} />;
+
   return (
-    <div className="min-h-screen text-matti flex flex-col font-sans relative selection:bg-terracotta selection:text-white">
-      {/* Dynamic Animated Bengali Traditional Art Background */}
-      <BengaliArtBackground />
-
-      {/* Glassmorphic Navbar with Nakshi ribbon */}
-      <Navbar />
-
-      <div className="flex flex-1 relative z-10">
-        <Sidebar />
-        <main className="flex-1 p-6 lg:p-10 max-w-7xl mx-auto w-full overflow-y-auto">
-          <Outlet />
+    <GuideProvider>
+      <div className="min-h-screen flex flex-col has-guide">
+        <Navbar />
+        <main className="flex-1 w-full max-w-5xl mx-auto px-4 sm:px-6 py-7">
+          <PageTransition />
         </main>
       </div>
-    </div>
+      <Guide />
+    </GuideProvider>
   );
 };

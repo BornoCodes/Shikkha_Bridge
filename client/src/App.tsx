@@ -14,6 +14,8 @@ import { UniversityNoteExchangePage } from './modules/content/pages/UniversityNo
 import { StudentDashboard } from './modules/dashboard/student/pages/StudentDashboard';
 import { TeacherDashboard } from './modules/dashboard/teacher/pages/TeacherDashboard';
 import { PlanApprovalPage } from './modules/dashboard/teacher/pages/PlanApprovalPage';
+import { PathPage } from './modules/path/pages/PathPage';
+import { ProfilePage } from './modules/profile/pages/ProfilePage';
 import { NotificationsPage } from './modules/notifications/pages/NotificationsPage';
 
 export const App: React.FC = () => {
@@ -28,6 +30,8 @@ export const App: React.FC = () => {
       <Route element={<Layout />}>
         {/* Student Hub & Unified Path */}
         <Route path="/student/dashboard" element={<StudentDashboard />} />
+        <Route path="/student/path" element={<PathPage />} />
+        <Route path="/profile" element={<ProfilePage />} />
         <Route path="/student/absences" element={<AbsenceTracker />} />
         <Route path="/student/assessments" element={<AssessmentListPage />} />
         <Route path="/student/assessments/:id" element={<AssessmentPage />} />

@@ -17,6 +17,8 @@ export default defineConfig({
       "/api": {
         target: "http://localhost:5000",
         changeOrigin: true,
+        // the NestJS server serves /auth, /absences ... with no /api prefix
+        rewrite: (p: string) => p.replace(/^\/api/, ""),
       },
     },
   },

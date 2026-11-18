@@ -6,6 +6,7 @@ import { Toaster } from 'react-hot-toast';
 import App from './App';
 import './shared/styles/globals.css';
 import './shared/styles/patterns.css';
+import './shared/styles/theme.css';
 
 const queryClient = new QueryClient({
   defaultOptions: {

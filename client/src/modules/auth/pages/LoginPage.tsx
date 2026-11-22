@@ -2,11 +2,11 @@ import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { toast } from 'react-hot-toast';
 import { authService } from '../services/auth.service';
-import { Button } from '../../../shared/components/ui/Button';
-import { Input } from '../../../shared/components/ui/Input';
-import { Logo } from '../../../shared/components/ui/Logo';
-import { KanthaBorder } from '../../../shared/art/KanthaBorder';
-import { AlponaRosette } from '../../../shared/art/Motifs';
+import { Button } from '../../../shared/components/form/Button';
+import { Input } from '../../../shared/components/form/Input';
+import { Logo } from '../../../shared/components/layout/Logo';
+import { KanthaBorder } from '../../../shared/bengali-art/KanthaBorder';
+import { AlponaRosette } from '../../../shared/bengali-art/Motifs';
 
 export const LoginPage: React.FC = () => {
   const navigate = useNavigate();
@@ -23,26 +23,11 @@ export const LoginPage: React.FC = () => {
 
     setLoading(true);
     try {
-      const res = await authService.login(email, password);
+      await authService.login(email, password);
       toast.success('Welcome back!');
-      const role = res.data?.user?.role;
-      navigate(role === 'teacher' ? '/teacher/dashboard' : '/student/dashboard');
+      navigate('/home');
     } catch {
-      // Mock login for demo
-      const mockRole = email.includes('teacher') ? 'teacher' : 'student';
-      const mockUser = {
-        id: 'usr-1',
-        name: email.split('@')[0] || 'ShikkhaBridge Scholar',
-        email,
-        role: mockRole as 'student' | 'teacher',
-        school: 'Sylhet Pilot High School',
-        class: 'Class 9',
-        createdAt: new Date().toISOString(),
-      };
-      localStorage.setItem('shikkha_token', 'mock-jwt-token-demo');
-      localStorage.setItem('shikkha_user', JSON.stringify(mockUser));
-      toast.success(`Signed in as ${mockUser.name} (${mockRole})`);
-      navigate(mockRole === 'teacher' ? '/teacher/dashboard' : '/student/dashboard');
+      toast.error('Sign-in failed. Check your email and password, then try again.');
     } finally {
       setLoading(false);
     }

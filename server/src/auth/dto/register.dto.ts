@@ -4,20 +4,20 @@ import { UserRole } from '../../users/models/user.entity';
 export class RegisterDto {
   @IsNotEmpty()
   @IsString()
-  name: string;
+  name!: string;
 
   @IsNotEmpty()
   @IsEmail()
-  email: string;
+  email!: string;
 
   @IsNotEmpty()
   @IsString()
   @MinLength(6)
-  password: string;
+  password!: string;
 
   @IsNotEmpty()
   @IsEnum(UserRole)
-  role: UserRole;
+  role!: UserRole;
 
   @IsOptional()
   @IsString()
@@ -25,5 +25,5 @@ export class RegisterDto {
 
   @IsNotEmpty()
   @IsString()
-  school: string;
+  school!: string;
 }

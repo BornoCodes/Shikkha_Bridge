@@ -60,3 +60,20 @@ shikkha-bridge/
     └── routers/plan_generation.py  # 🔵 Member 3
 ```
 
+
+MySQL: The database. Stores user accounts, and later whatever each feature needs (quizzes, plans, etc.) |
+NestJS(+ TypeScript) | The backend/server. Handles login, talks to MySQL, exposes the API the frontend calls |
+React (+ TypeScript, Vite) | The frontend. Everything you see and click — pages, buttons, the character |
+Tailwind CSS | Styling — the Kantha-paper look, colors, spacing, layout |
+framer-motion | Animation — the page-transition curtain, the Chibi guide's movements |
+react-router | Switches between pages (login, home, profile) without reloading the browser |
+FastAPI (Python) | The separate AI service, for whatever AI features teammates add (quiz generation, etc.) |
+JWT + bcrypt | Security — bcrypt scrambles passwords before saving them, JWT is the "login token" that proves you're signed in on later requests |
+TypeORM | The translator between NestJS and MySQL — lets the backend read/write the database using TypeScript instead of raw SQL |
+Git/GitHub | Version control — where the code lives, how your team shares and merges work |
+Figma | Design mockups (separate from the code — for planning what things should look like before building) |
+Docker | Not a new feature, just a way to package and run all of the above (MySQL, backend, frontend, AI service) together with one command, instead of installing each one separately |
+
+So Docker isn't "for MySQL" specifically — it's running all four pieces (MySQL + NestJS backend + React frontend + FastAPI service) as four small boxes that talk to each other. MySQL just happens to be one of those four boxes.
+
+This matches the stack from your original project proposal — nothing new was introduced, Docker is just the delivery method for it.

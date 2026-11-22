@@ -4,12 +4,7 @@ import {
   Column,
   CreateDateColumn,
   UpdateDateColumn,
-  OneToMany,
 } from 'typeorm';
-import { Absence } from '../../absence/models/absence.entity';
-import { Assessment } from '../../assessment/models/assessment.entity';
-import { RecoveryPlan } from '../../recovery/models/recovery-plan.entity';
-import { Notification } from '../../notifications/models/notification.entity';
 
 export enum UserRole {
   STUDENT = 'student',
@@ -19,44 +14,34 @@ export enum UserRole {
 @Entity('users')
 export class User {
   @PrimaryGeneratedColumn('uuid')
-  id: string;
+  id!: string;
 
   @Column({ length: 255 })
-  name: string;
+  name!: string;
 
   @Column({ unique: true, length: 255 })
-  email: string;
+  email!: string;
 
   @Column({ name: 'password_hash', length: 255 })
-  passwordHash: string;
+  passwordHash!: string;
 
   @Column({ type: 'enum', enum: UserRole })
-  role: UserRole;
+  role!: UserRole;
 
   @Column({ nullable: true, length: 50 })
-  class: string;
+  class!: string;
 
   @Column({ length: 255 })
-  school: string;
+  school!: string;
 
   @Column({ name: 'avatar_url', nullable: true, length: 500 })
-  avatarUrl: string;
+  avatarUrl!: string;
 
   @CreateDateColumn({ name: 'created_at' })
-  createdAt: Date;
+  createdAt!: Date;
 
   @UpdateDateColumn({ name: 'updated_at' })
-  updatedAt: Date;
+  updatedAt!: Date;
 
-  @OneToMany(() => Absence, (absence) => absence.student)
-  absences: Absence[];
-
-  @OneToMany(() => Assessment, (assessment) => assessment.student)
-  assessments: Assessment[];
-
-  @OneToMany(() => RecoveryPlan, (plan) => plan.student)
-  recoveryPlans: RecoveryPlan[];
-
-  @OneToMany(() => Notification, (notification) => notification.user)
-  notifications: Notification[];
+  // Teammates: add your own @OneToMany relations to this entity in your feature branch.
 }

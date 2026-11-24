@@ -1,3 +1,6 @@
+import { NotesBiddingModule } from './notes-bidding-server/notes-bidding.module';
+
+
 import { Module } from '@nestjs/common';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { TypeOrmModule } from '@nestjs/typeorm';

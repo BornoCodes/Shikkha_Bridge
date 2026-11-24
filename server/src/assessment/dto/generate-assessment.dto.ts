@@ -1,4 +1,13 @@
-import { IsNotEmpty, IsString, IsOptional, IsInt, Min, Max } from 'class-validator';
+
+import {
+  IsNotEmpty,
+  IsString,
+  IsOptional,
+  IsInt,
+  IsUUID,
+  Min,
+  Max,
+} from 'class-validator';
 
 export class GenerateAssessmentDto {
   @IsNotEmpty()
@@ -14,4 +23,8 @@ export class GenerateAssessmentDto {
   @Min(1)
   @Max(20)
   questionCount?: number;
+
+  @IsOptional()
+  @IsUUID()
+  videoSegmentId?: string;
 }

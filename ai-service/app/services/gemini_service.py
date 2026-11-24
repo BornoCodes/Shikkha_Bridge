@@ -1,4 +1,8 @@
 import os
+from pathlib import Path
+from dotenv import load_dotenv
+
+load_dotenv(Path(__file__).resolve().parents[3] / ".env")
 import json
 import logging
 from typing import Dict, Any, Optional
@@ -14,49 +18,120 @@ class GeminiService:
         if self.api_key:
             try:
                 genai.configure(api_key=self.api_key)
-                self.model = genai.GenerativeModel("gemini-1.5-flash")
+                self.model = genai.GenerativeModel("gemini-3.5-flash-lite")
                 self.client_available = True
             except Exception as e:
                 logger.warning(f"Failed to initialize Gemini Client: {e}")
 
-    async def generate_quiz(self, topic_name: str, topic_description: str, difficulty: str = "medium", question_count: int = 5) -> Dict[str, Any]:
-        prompt = QUIZ_GENERATION_PROMPT.format(
-            topic_name=topic_name,
-            topic_description=topic_description or topic_name,
-            difficulty=difficulty,
-            question_count=question_count
-        )
+    async def generate_quiz(
+        self,
+        topic_name: str,
+        topic_description: str,
+        segment_title: str = "",
+        learning_content: str = "",
+        difficulty: str = "medium",
+        question_count: int = 5,
+    ) -> Dict[str, Any]:
 
-        if self.client_available:
-            try:
-                response = self.model.generate_content(prompt)
-                clean_text = response.text.strip().replace("```json", "").replace("```", "").strip()
-                return json.loads(clean_text)
-            except Exception as e:
-                logger.error(f"Gemini API call failed, falling back to mock: {e}")
+        if not self.client_available:
+            raise RuntimeError(
+                "Gemini is not configured. Quiz generation requires an available AI service."
+            )
 
-        # Deterministic intelligent fallback when API key is not yet set
-        return {
-            "topic_name": topic_name,
-            "difficulty": difficulty,
-            "questions": [
-                {
-                    "id": i + 1,
-                    "question": f"Key concept diagnostic {i+1} regarding {topic_name}: What is the primary foundational rule?",
-                    "options": [
-                        f"Fundamental principle A of {topic_name}",
-                        f"Alternate hypothesis B regarding {topic_name}",
-                        f"Empirical variation C in practice",
-                        f"Contradictory state D"
-                    ],
-                    "correct_answer": f"Fundamental principle A of {topic_name}",
-                    "explanation": f"Core definition and prerequisite knowledge of {topic_name}.",
-                    "difficulty": difficulty
-                }
-                for i in range(question_count)
-            ]
-        }
+        source_content = learning_content.strip() or topic_description.strip()
 
+        if not source_content:
+            raise ValueError("Learning content is required to generate quiz questions.")
+
+        prompt = f"""
+You are an expert school-level educational assessment designer.
+
+Create exactly {question_count} meaningful multiple-choice questions.
+
+SUBJECT/TOPIC: {topic_name}
+SEGMENT: {segment_title or topic_name}
+DIFFICULTY: {difficulty}
+
+AUTHORITATIVE LEARNING MATERIAL:
+{source_content}
+
+STRICT REQUIREMENTS:
+1. Base every question on the supplied learning material.
+2. Do not invent facts or test information absent from the material.
+3. Write clear, complete questions that test understanding and application.
+4. Make questions meaningfully different from one another.
+5. Provide exactly four distinct, plausible answer options per question.
+6. Only one option must be correct.
+7. The correct_answer value must exactly match one of the four options.
+8. Avoid generic questions, repeated questions, and placeholder options.
+9. Include a short explanation grounded in the learning material.
+10. Match the requested difficulty.
+
+Return ONLY valid JSON in this exact structure:
+{{
+  "topic_name": "{topic_name}",
+  "difficulty": "{difficulty}",
+  "questions": [
+    {{
+      "id": 1,
+      "question": "A complete question?",
+      "options": ["Option A", "Option B", "Option C", "Option D"],
+      "correct_answer": "Option A",
+      "explanation": "Explanation based on the supplied material.",
+      "difficulty": "{difficulty}"
+    }}
+  ]
+}}
+"""
+
+        try:
+            response = self.model.generate_content(prompt)
+
+            response_text = "".join(
+                part.text
+                for part in response.parts
+                if getattr(part, "text", None)
+            )
+
+            if not response_text.strip():
+                raise ValueError("Gemini returned an empty response.")
+
+            clean_text = (
+                response_text.strip()
+                .replace("```json", "")
+                .replace("```", "")
+                .strip()
+            )
+
+            quiz = json.loads(clean_text)
+            questions = quiz.get("questions")
+
+            if not isinstance(questions, list) or len(questions) != question_count:
+                raise ValueError("Gemini returned an incorrect number of questions.")
+
+            for question in questions:
+                options = question.get("options", [])
+                correct_answer = question.get("correct_answer", "")
+
+                if (
+                    not isinstance(question.get("question"), str)
+                    or not question["question"].strip()
+                    or not isinstance(options, list)
+                    or len(options) != 4
+                    or any(not isinstance(option, str) or not option.strip() for option in options)
+                    or len(set(option.strip() for option in options)) != 4
+                    or not isinstance(correct_answer, str)
+                    or correct_answer.strip() not in [option.strip() for option in options]
+                ):
+                    raise ValueError("Gemini returned an invalid question or answer.")
+
+            return quiz
+
+        except Exception as e:
+            logger.error("Quiz generation failed: %s", e)
+            raise RuntimeError(
+                "Could not generate valid questions from the supplied learning content. Please try again."
+            ) from e
     async def generate_recovery_plan(self, gaps_data: Any, assessment_data: Any) -> Dict[str, Any]:
         prompt = RECOVERY_PLAN_PROMPT.format(
             gaps_data=json.dumps(gaps_data, default=str),
@@ -75,8 +150,8 @@ class GeminiService:
         steps = []
         if isinstance(gaps_data, list):
             for idx, gap in enumerate(gaps_data):
-                t_name = gap.get("topic_name", f"Curriculum Module {idx+1}")
-                t_id = gap.get("topic_id", f"t-{idx+1}")
+                t_name = gap.get("topic_name") or gap.get("topicName") or f"Curriculum Module {idx+1}"
+                t_id = gap.get("topic_id") or gap.get("topicId") or f"t-{idx+1}"
                 steps.append({
                     "order": idx + 1,
                     "topic_id": t_id,

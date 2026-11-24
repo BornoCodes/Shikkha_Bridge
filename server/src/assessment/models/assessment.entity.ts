@@ -1,3 +1,4 @@
+
 import {
   Entity,
   PrimaryGeneratedColumn,
@@ -7,9 +8,11 @@ import {
   OneToMany,
   JoinColumn,
 } from 'typeorm';
+
 import { User } from '../../users/models/user.entity';
 import { Topic } from '../../content/models/topic.entity';
 import { AssessmentQuestion } from './assessment-question.entity';
+import { VideoSegment } from '../../video-learning/models/video-segment.entity';
 
 @Entity('assessments')
 export class Assessment {
@@ -30,6 +33,19 @@ export class Assessment {
   @JoinColumn({ name: 'topic_id' })
   topic: Topic;
 
+  @Column({
+    name: 'video_segment_id',
+    type: 'varchar',
+    length: 36,
+    nullable: true,
+  })
+  videoSegmentId: string | null;
+  
+
+  @ManyToOne(() => VideoSegment, { nullable: true, onDelete: 'SET NULL' })
+  @JoinColumn({ name: 'video_segment_id' })
+  videoSegment: VideoSegment | null;
+
   @Column({ type: 'float', default: 0 })
   score: number;
 
@@ -40,7 +56,7 @@ export class Assessment {
   completed: boolean;
 
   @Column({ name: 'completed_at', type: 'datetime', nullable: true })
-  completedAt: Date;
+  completedAt: Date | null;
 
   @OneToMany(() => AssessmentQuestion, (q) => q.assessment, { cascade: true })
   questions: AssessmentQuestion[];

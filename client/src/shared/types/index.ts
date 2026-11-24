@@ -217,26 +217,68 @@ export interface AssessmentResult {
 }
 
 // ===== Recovery Plan =====
-export type PlanStatus = 'draft' | 'pending' | 'approved' | 'active' | 'completed' | 'archived';
+export type PlanStatus =
+  | 'draft'
+  | 'pending'
+  | 'approved'
+  | 'rejected'
+  | 'active'
+  | 'in_progress'
+  | 'completed'
+  | 'archived';
+
+export interface RecoveryPlanTopic {
+  id: string;
+  name: string;
+  subject?: string;
+}
+
+export interface RecoveryPlanContent {
+  id: string;
+  title: string;
+  type?: string;
+  url?: string;
+}
 
 export interface RecoveryPlanItem {
   id: string;
-  topicId: string;
-  contentId?: string;
+  topicId: string | null;
+  contentId?: string | null;
+  topic?: RecoveryPlanTopic | null;
+  content?: RecoveryPlanContent | null;
   order: number;
   estimatedHours: number;
   completed: boolean;
-  completedAt?: string;
+  completedAt?: string | null;
   notes?: string;
+}
+
+export interface RecoveryPlanStep {
+  topic_id?: string;
+  topic_name?: string;
+  content_id?: string;
+  content_title?: string;
+  estimated_hours?: number;
+  description?: string;
+}
+
+export interface RecoveryPlanAIData {
+  title?: string;
+  summary?: string;
+  total_estimated_hours?: number;
+  steps?: RecoveryPlanStep[];
 }
 
 export interface RecoveryPlan {
   id: string;
   studentId: string;
-  teacherId: string;
-  title: string;
+  teacherId?: string | null;
+  title?: string;
   description?: string;
   status: PlanStatus;
+  totalHours: number;
+  aiGeneratedPlan?: RecoveryPlanAIData | null;
+  teacherNotes?: string | null;
   items: RecoveryPlanItem[];
   createdAt: string;
   updatedAt?: string;

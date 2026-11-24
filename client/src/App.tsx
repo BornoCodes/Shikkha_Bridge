@@ -1,4 +1,4 @@
-import React from 'react';
+﻿import React from 'react';
 import { Routes, Route, Navigate } from 'react-router-dom';
 import { LandingPage } from './shared/components/ui/LandingPage';
 import { Layout } from './shared/components/ui/Layout';
@@ -17,18 +17,18 @@ import { PlanApprovalPage } from './modules/dashboard/teacher/pages/PlanApproval
 import { PathPage } from './modules/path/pages/PathPage';
 import { ProfilePage } from './modules/profile/pages/ProfilePage';
 import { NotificationsPage } from './modules/notifications/pages/NotificationsPage';
-
+import { RecoveryPlanCreatePage } from './modules/recovery/pages/RecoveryPlanCreatePage';
+import { VideoLessonsPage } from './modules/video-learning/pages/VideoLessonsPage';
+import { VideoLessonPage } from './modules/video-learning/pages/VideoLessonPage';
+import { TeacherVideoLessonsPage } from './modules/video-learning/pages/TeacherVideoLessonsPage';
 export const App: React.FC = () => {
   return (
     <Routes>
-      {/* Public Routes */}
       <Route path="/" element={<LandingPage />} />
       <Route path="/login" element={<LoginPage />} />
       <Route path="/register" element={<RegisterPage />} />
 
-      {/* Authenticated Dashboard Space */}
       <Route element={<Layout />}>
-        {/* Student Hub & Unified Path */}
         <Route path="/student/dashboard" element={<StudentDashboard />} />
         <Route path="/student/path" element={<PathPage />} />
         <Route path="/profile" element={<ProfilePage />} />
@@ -36,22 +36,23 @@ export const App: React.FC = () => {
         <Route path="/student/assessments" element={<AssessmentListPage />} />
         <Route path="/student/assessments/:id" element={<AssessmentPage />} />
         <Route path="/student/recovery-plans" element={<RecoveryPlanListPage />} />
+        <Route path="/student/recovery-plans/new" element={<RecoveryPlanCreatePage />} />
         <Route path="/student/recovery-plans/:id" element={<RecoveryPlanPage />} />
         <Route path="/student/content" element={<ContentLibraryPage />} />
 
-        {/* University Note Exchange & Student Tutor System */}
+        <Route path="/student/videos" element={<VideoLessonsPage />} />
+        <Route path="/student/videos/:lessonId" element={<VideoLessonPage />} />
+
         <Route path="/university/notes" element={<UniversityNoteExchangePage />} />
 
-        {/* Teacher Hub */}
         <Route path="/teacher/dashboard" element={<TeacherDashboard />} />
+        <Route path="/teacher/videos" element={<TeacherVideoLessonsPage />} />
         <Route path="/teacher/plans" element={<TeacherDashboard />} />
         <Route path="/teacher/plans/:id" element={<PlanApprovalPage />} />
 
-        {/* Common Alert Hub */}
         <Route path="/notifications" element={<NotificationsPage />} />
       </Route>
 
-      {/* Fallback */}
       <Route path="*" element={<Navigate to="/" replace />} />
     </Routes>
   );

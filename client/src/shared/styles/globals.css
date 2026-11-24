@@ -1,0 +1,348 @@
+/* ===== Fonts ===== */
+@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700;800&family=Inter:wght@300;400;500;600;700&family=Noto+Sans+Bengali:wght@300;400;500;600;700&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* ===== Base ===== */
+@layer base {
+  html {
+    scroll-behavior: smooth;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+
+  body {
+    @apply bg-cream text-matti font-sans;
+    font-family: 'Inter', 'Noto Sans Bengali', sans-serif;
+  }
+
+  h1, h2, h3, h4, h5, h6 {
+    font-family: 'Playfair Display', 'Noto Sans Bengali', serif;
+  }
+
+  ::selection {
+    @apply bg-terracotta/30 text-matti;
+  }
+}
+
+/* ===== Scrollbar ===== */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  @apply bg-parchment;
+}
+
+::-webkit-scrollbar-thumb {
+  @apply bg-terracotta/40 rounded-full;
+  transition: background 0.2s;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  @apply bg-terracotta/70;
+}
+
+/* ===== Nakshi Kantha Border ===== */
+@layer components {
+  .nakshi-border {
+    position: relative;
+  }
+
+  .nakshi-border::before {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: 4px;
+    background:
+      repeating-linear-gradient(
+        90deg,
+        #C84B31 0px,
+        #C84B31 4px,
+        transparent 4px,
+        transparent 8px
+      ),
+      repeating-linear-gradient(
+        90deg,
+        #E8A317 0px,
+        #E8A317 2px,
+        transparent 2px,
+        transparent 6px
+      );
+    background-size: 16px 2px, 12px 2px;
+    background-position: 0 0, 2px 2px;
+    background-repeat: repeat-x;
+  }
+
+  .nakshi-border-top::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 4px;
+    background:
+      repeating-linear-gradient(
+        90deg,
+        #C84B31 0px,
+        #C84B31 4px,
+        transparent 4px,
+        transparent 8px
+      ),
+      repeating-linear-gradient(
+        90deg,
+        #E8A317 0px,
+        #E8A317 2px,
+        transparent 2px,
+        transparent 6px
+      );
+    background-size: 16px 2px, 12px 2px;
+    background-position: 0 0, 2px 2px;
+    background-repeat: repeat-x;
+  }
+
+  .nakshi-border-thick {
+    position: relative;
+  }
+
+  .nakshi-border-thick::before {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: 8px;
+    background:
+      repeating-linear-gradient(45deg, #C84B31 0px, #C84B31 2px, transparent 2px, transparent 6px),
+      repeating-linear-gradient(-45deg, #E8A317 0px, #E8A317 2px, transparent 2px, transparent 6px);
+    background-size: 8px 8px;
+  }
+}
+
+/* ===== Alpona Divider ===== */
+@layer components {
+  .alpona-divider {
+    position: relative;
+    height: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .alpona-divider::before,
+  .alpona-divider::after {
+    content: '';
+    flex: 1;
+    height: 1px;
+    background: linear-gradient(
+      90deg,
+      transparent,
+      #C84B31 20%,
+      #E8A317 50%,
+      #C84B31 80%,
+      transparent
+    );
+  }
+
+  .alpona-divider::before {
+    margin-right: 16px;
+  }
+
+  .alpona-divider::after {
+    margin-left: 16px;
+  }
+
+  .alpona-divider-icon {
+    width: 24px;
+    height: 24px;
+    background: radial-gradient(circle, #C84B31 30%, transparent 30%),
+      radial-gradient(circle at 0% 50%, #E8A317 15%, transparent 15%),
+      radial-gradient(circle at 100% 50%, #E8A317 15%, transparent 15%),
+      radial-gradient(circle at 50% 0%, #E8A317 15%, transparent 15%),
+      radial-gradient(circle at 50% 100%, #E8A317 15%, transparent 15%);
+    flex-shrink: 0;
+    border-radius: 50%;
+  }
+}
+
+/* ===== Card Hover Effects ===== */
+@layer components {
+  .card-bengali {
+    @apply relative overflow-hidden rounded-xl transition-all duration-300;
+    background: linear-gradient(135deg, #FFF8F0 0%, #F5E6D3 100%);
+  }
+
+  .card-bengali:hover {
+    transform: translateY(-4px);
+    box-shadow:
+      0 12px 32px rgba(200, 75, 49, 0.12),
+      0 4px 8px rgba(200, 75, 49, 0.08);
+  }
+
+  .card-bengali::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: 3px;
+    background: linear-gradient(90deg, #C84B31, #E8A317, #D4789C, #C84B31);
+    background-size: 200% 100%;
+    transform: scaleX(0);
+    transform-origin: left;
+    transition: transform 0.4s ease;
+  }
+
+  .card-bengali:hover::after {
+    transform: scaleX(1);
+  }
+}
+
+/* ===== Animations ===== */
+@keyframes float {
+  0%, 100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-8px);
+  }
+}
+
+@keyframes gentle-pulse {
+  0%, 100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 0.85;
+    transform: scale(1.03);
+  }
+}
+
+@keyframes shimmer {
+  0% {
+    background-position: -200% 0;
+  }
+  100% {
+    background-position: 200% 0;
+  }
+}
+
+@keyframes spin-slow {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@keyframes fade-in-up {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes fade-in {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes slide-in-right {
+  from {
+    opacity: 0;
+    transform: translateX(24px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+@layer utilities {
+  .animate-float {
+    animation: float 3s ease-in-out infinite;
+  }
+
+  .animate-gentle-pulse {
+    animation: gentle-pulse 2s ease-in-out infinite;
+  }
+
+  .animate-shimmer {
+    background: linear-gradient(
+      90deg,
+      transparent 0%,
+      rgba(255, 248, 240, 0.6) 50%,
+      transparent 100%
+    );
+    background-size: 200% 100%;
+    animation: shimmer 2s infinite;
+  }
+
+  .animate-spin-slow {
+    animation: spin-slow 3s linear infinite;
+  }
+
+  .animate-fade-in-up {
+    animation: fade-in-up 0.6s ease-out forwards;
+  }
+
+  .animate-fade-in {
+    animation: fade-in 0.4s ease-out forwards;
+  }
+
+  .animate-slide-in-right {
+    animation: slide-in-right 0.4s ease-out forwards;
+  }
+}
+
+/* ===== Page transitions ===== */
+.page-enter {
+  opacity: 0;
+  transform: translateY(12px);
+}
+
+.page-enter-active {
+  opacity: 1;
+  transform: translateY(0);
+  transition: opacity 0.3s ease, transform 0.3s ease;
+}
+
+.page-exit {
+  opacity: 1;
+}
+
+.page-exit-active {
+  opacity: 0;
+  transition: opacity 0.2s ease;
+}
+
+/* ===== Gradient text ===== */
+.gradient-text-warm {
+  background: linear-gradient(135deg, #C84B31 0%, #E8A317 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+/* ===== Glass effect ===== */
+.glass {
+  background: rgba(255, 248, 240, 0.7);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid rgba(255, 248, 240, 0.3);
+}

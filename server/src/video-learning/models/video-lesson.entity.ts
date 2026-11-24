@@ -14,14 +14,14 @@ import { User } from '../../users/models/user.entity';
 @Entity('video_lessons')
 export class VideoLesson {
   @PrimaryGeneratedColumn('uuid')
-  id: string;
+  id!: string;
 
   @Column({ name: 'topic_id' })
-  topicId: string;
+  topicId!: string;
 
   @ManyToOne(() => Topic, { onDelete: 'CASCADE' })
   @JoinColumn({ name: 'topic_id' })
-  topic: Topic;
+  topic!: Topic;
 
   @Column({
     name: 'teacher_id',
@@ -29,24 +29,24 @@ export class VideoLesson {
     length: 36,
     nullable: true,
   })
-  teacherId: string | null;
+  teacherId!: string | null;
 
   @ManyToOne(() => User, { nullable: true, onDelete: 'SET NULL' })
   @JoinColumn({ name: 'teacher_id' })
-  teacher: User | null;
+  teacher!: User | null;
 
   @Column({ length: 255 })
-  title: string;
+  title!: string;
 
   @Column({ type: 'text', nullable: true })
-  description: string;
+  description!: string;
 
   @Column({ name: 'video_url', length: 1000 })
-  videoUrl: string;
+  videoUrl!: string;
 
   @Column({ default: false })
-  published: boolean;
+  published!: boolean;
 
   @CreateDateColumn({ name: 'created_at' })
-  createdAt: Date;
+  createdAt!: Date;
 }

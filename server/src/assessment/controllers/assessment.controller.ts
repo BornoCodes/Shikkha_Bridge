@@ -1,4 +1,3 @@
-
 import {
   Controller,
   Post,
@@ -15,6 +14,12 @@ import { GenerateAssessmentDto } from '../dto/generate-assessment.dto';
 import { SubmitAssessmentDto } from '../dto/submit-assessment.dto';
 import { JwtAuthGuard } from '../../auth/guards/jwt-auth.guard';
 
+interface AuthenticatedRequest {
+  user: {
+    id: string;
+  };
+}
+
 @Controller('assessments')
 @UseGuards(JwtAuthGuard)
 export class AssessmentController {
@@ -24,7 +29,7 @@ export class AssessmentController {
 
   @Post('generate')
   async generateAssessment(
-    @Request() req,
+    @Request() req: AuthenticatedRequest,
     @Body() dto: GenerateAssessmentDto,
   ) {
     return this.assessmentService.generateAssessment(
@@ -35,7 +40,7 @@ export class AssessmentController {
 
   @Post('submit')
   async submitAssessment(
-    @Request() req,
+    @Request() req: AuthenticatedRequest,
     @Body() dto: SubmitAssessmentDto,
   ) {
     return this.assessmentService.submitAssessment(
@@ -46,7 +51,7 @@ export class AssessmentController {
 
   @Get('student/:studentId')
   async getStudentAssessments(
-    @Request() req,
+    @Request() req: AuthenticatedRequest,
     @Param('studentId', ParseUUIDPipe) studentId: string,
   ) {
     if (req.user.id !== studentId) {
@@ -60,7 +65,7 @@ export class AssessmentController {
 
   @Get(':id')
   async getAssessmentById(
-    @Request() req,
+    @Request() req: AuthenticatedRequest,
     @Param('id', ParseUUIDPipe) id: string,
   ) {
     return this.assessmentService.getAssessmentById(

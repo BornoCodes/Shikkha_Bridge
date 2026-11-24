@@ -1,4 +1,3 @@
-
 import {
   Controller,
   Get,
@@ -16,6 +15,12 @@ import { RolesGuard } from '../../auth/guards/roles.guard';
 import { Roles } from '../../common/decorators/roles.decorator';
 import { UserRole } from '../../users/models/user.entity';
 import { VideoLearningService } from '../services/video-learning.service';
+
+interface AuthenticatedRequest {
+  user: {
+    id: string;
+  };
+}
 
 @Controller('video-learning')
 @UseGuards(JwtAuthGuard)
@@ -40,7 +45,7 @@ export class VideoLearningController {
 
   @Get('lessons/:lessonId/progress')
   async getLessonProgress(
-    @Request() req,
+    @Request() req: AuthenticatedRequest,
     @Param('lessonId', ParseUUIDPipe) lessonId: string,
   ) {
     return this.videoLearningService.getLessonProgress(
@@ -51,7 +56,7 @@ export class VideoLearningController {
 
   @Post('segments/:segmentId/start')
   async startSegment(
-    @Request() req,
+    @Request() req: AuthenticatedRequest,
     @Param('segmentId', ParseUUIDPipe) segmentId: string,
   ) {
     return this.videoLearningService.startSegment(
@@ -65,7 +70,7 @@ export class VideoLearningController {
   @Get('teacher/lessons')
   @UseGuards(RolesGuard)
   @Roles(UserRole.TEACHER)
-  async getTeacherLessons(@Request() req) {
+  async getTeacherLessons(@Request() req: AuthenticatedRequest) {
     return this.videoLearningService.getTeacherLessons(req.user.id);
   }
 
@@ -73,7 +78,7 @@ export class VideoLearningController {
   @UseGuards(RolesGuard)
   @Roles(UserRole.TEACHER)
   async createLesson(
-    @Request() req,
+    @Request() req: AuthenticatedRequest,
     @Body() dto: {
       topicId: string;
       title: string;
@@ -91,7 +96,7 @@ export class VideoLearningController {
   @UseGuards(RolesGuard)
   @Roles(UserRole.TEACHER)
   async createSegment(
-    @Request() req,
+    @Request() req: AuthenticatedRequest,
     @Param('lessonId', ParseUUIDPipe) lessonId: string,
     @Body() dto: {
       title: string;
@@ -113,7 +118,7 @@ export class VideoLearningController {
   @UseGuards(RolesGuard)
   @Roles(UserRole.TEACHER)
   async updateSegmentContent(
-    @Request() req,
+    @Request() req: AuthenticatedRequest,
     @Param('segmentId', ParseUUIDPipe) segmentId: string,
     @Body() dto: { learningContent: string },
   ) {
@@ -123,11 +128,12 @@ export class VideoLearningController {
       dto.learningContent,
     );
   }
+
   @Patch('teacher/lessons/:lessonId/publish')
   @UseGuards(RolesGuard)
   @Roles(UserRole.TEACHER)
   async publishLesson(
-    @Request() req,
+    @Request() req: AuthenticatedRequest,
     @Param('lessonId', ParseUUIDPipe) lessonId: string,
   ) {
     return this.videoLearningService.publishLesson(

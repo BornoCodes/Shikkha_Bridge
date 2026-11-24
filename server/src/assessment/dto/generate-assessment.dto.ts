@@ -1,4 +1,3 @@
-
 import {
   IsNotEmpty,
   IsString,
@@ -12,7 +11,7 @@ import {
 export class GenerateAssessmentDto {
   @IsNotEmpty()
   @IsString()
-  topicId: string;
+  topicId!: string;
 
   @IsOptional()
   @IsString()

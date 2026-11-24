@@ -16,46 +16,44 @@ import { VideoSegment } from './video-segment.entity';
 @Index('UQ_video_progress_student_segment', ['studentId', 'segmentId'], { unique: true })
 export class VideoProgress {
   @PrimaryGeneratedColumn('uuid')
-  id: string;
+  id!: string;
 
   @Column({ name: 'student_id' })
-  studentId: string;
+  studentId!: string;
 
   @ManyToOne(() => User, { onDelete: 'CASCADE' })
   @JoinColumn({ name: 'student_id' })
-  student: User;
+  student!: User;
 
   @Column({ name: 'lesson_id' })
-  lessonId: string;
+  lessonId!: string;
 
   @ManyToOne(() => VideoLesson, { onDelete: 'CASCADE' })
   @JoinColumn({ name: 'lesson_id' })
-  lesson: VideoLesson;
+  lesson!: VideoLesson;
 
   @Column({ name: 'segment_id' })
-  segmentId: string;
+  segmentId!: string;
 
   @ManyToOne(() => VideoSegment, { onDelete: 'CASCADE' })
   @JoinColumn({ name: 'segment_id' })
-  segment: VideoSegment;
+  segment!: VideoSegment;
 
   @Column({ default: false })
-  unlocked: boolean;
+  unlocked!: boolean;
 
   @Column({ default: false })
-  completed: boolean;
+  completed!: boolean;
 
   @Column({ name: 'quiz_score', type: 'float', nullable: true })
-  quizScore: number;
+  quizScore!: number;
 
   @Column({ name: 'completed_at', type: 'datetime', nullable: true })
-  completedAt: Date;
+  completedAt!: Date;
 
   @CreateDateColumn({ name: 'created_at' })
-  createdAt: Date;
+  createdAt!: Date;
 
   @UpdateDateColumn({ name: 'updated_at' })
-  updatedAt: Date;
+  updatedAt!: Date;
 }
-
-

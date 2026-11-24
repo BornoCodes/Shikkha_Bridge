@@ -11,36 +11,36 @@ import { VideoLesson } from './video-lesson.entity';
 @Entity('video_segments')
 export class VideoSegment {
   @PrimaryGeneratedColumn('uuid')
-  id: string;
+  id!: string;
 
   @Column({ name: 'lesson_id' })
-  lessonId: string;
+  lessonId!: string;
 
   @ManyToOne(() => VideoLesson, { onDelete: 'CASCADE' })
   @JoinColumn({ name: 'lesson_id' })
-  lesson: VideoLesson;
+  lesson!: VideoLesson;
 
   @Column({ length: 255 })
-  title: string;
+  title!: string;
 
   @Column({ name: 'learning_content', type: 'text', nullable: true })
-  learningContent: string | null;
+  learningContent!: string | null;
 
   @Column({ name: 'video_url', length: 1000, nullable: true })
-  videoUrl: string;
+  videoUrl!: string;
 
   @Column({ name: 'start_time', type: 'int', default: 0 })
-  startTime: number;
+  startTime!: number;
 
   @Column({ name: 'end_time', type: 'int' })
-  endTime: number;
+  endTime!: number;
 
   @Column({ name: 'segment_order', type: 'int' })
-  segmentOrder: number;
+  segmentOrder!: number;
 
   @Column({ name: 'passing_score', type: 'int', default: 70 })
-  passingScore: number;
+  passingScore!: number;
 
   @CreateDateColumn({ name: 'created_at' })
-  createdAt: Date;
+  createdAt!: Date;
 }

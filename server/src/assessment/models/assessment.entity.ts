@@ -1,4 +1,3 @@
-
 import {
   Entity,
   PrimaryGeneratedColumn,
@@ -17,21 +16,21 @@ import { VideoSegment } from '../../video-learning/models/video-segment.entity';
 @Entity('assessments')
 export class Assessment {
   @PrimaryGeneratedColumn('uuid')
-  id: string;
+  id!: string;
 
   @Column({ name: 'student_id' })
-  studentId: string;
+  studentId!: string;
 
   @ManyToOne(() => User, (user) => user.assessments, { onDelete: 'CASCADE' })
   @JoinColumn({ name: 'student_id' })
-  student: User;
+  student!: User;
 
   @Column({ name: 'topic_id' })
-  topicId: string;
+  topicId!: string;
 
   @ManyToOne(() => Topic, { eager: true, onDelete: 'CASCADE' })
   @JoinColumn({ name: 'topic_id' })
-  topic: Topic;
+  topic!: Topic;
 
   @Column({
     name: 'video_segment_id',
@@ -39,28 +38,27 @@ export class Assessment {
     length: 36,
     nullable: true,
   })
-  videoSegmentId: string | null;
-  
+  videoSegmentId!: string | null;
 
   @ManyToOne(() => VideoSegment, { nullable: true, onDelete: 'SET NULL' })
   @JoinColumn({ name: 'video_segment_id' })
-  videoSegment: VideoSegment | null;
+  videoSegment!: VideoSegment | null;
 
   @Column({ type: 'float', default: 0 })
-  score: number;
+  score!: number;
 
   @Column({ name: 'total_questions', default: 5 })
-  totalQuestions: number;
+  totalQuestions!: number;
 
   @Column({ default: false })
-  completed: boolean;
+  completed!: boolean;
 
   @Column({ name: 'completed_at', type: 'datetime', nullable: true })
-  completedAt: Date | null;
+  completedAt!: Date | null;
 
   @OneToMany(() => AssessmentQuestion, (q) => q.assessment, { cascade: true })
-  questions: AssessmentQuestion[];
+  questions!: AssessmentQuestion[];
 
   @CreateDateColumn({ name: 'created_at' })
-  createdAt: Date;
+  createdAt!: Date;
 }

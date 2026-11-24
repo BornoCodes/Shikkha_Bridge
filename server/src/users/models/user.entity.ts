@@ -1,10 +1,14 @@
+
 import {
   Entity,
   PrimaryGeneratedColumn,
   Column,
   CreateDateColumn,
   UpdateDateColumn,
+  OneToMany,
 } from 'typeorm';
+
+import { Assessment } from '../../assessment/models/assessment.entity';
 
 export enum UserRole {
   STUDENT = 'student',
@@ -43,5 +47,6 @@ export class User {
   @UpdateDateColumn({ name: 'updated_at' })
   updatedAt!: Date;
 
-  // Teammates: add your own @OneToMany relations to this entity in your feature branch.
+  @OneToMany(() => Assessment, (assessment) => assessment.student)
+  assessments!: Assessment[];
 }

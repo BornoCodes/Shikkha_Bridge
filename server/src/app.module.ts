@@ -4,6 +4,7 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 
 import { AuthModule } from './auth/auth.module';
 import { UsersModule } from './users/users.module';
+import { ContentModule } from './content/content.module';
 import { AssessmentModule } from './assessment/assessment.module';
 import { VideoLearningModule } from './video-learning/video-learning.module';
 
@@ -22,6 +23,7 @@ import databaseConfig from './config/database.config';
     }),
     AuthModule,
     UsersModule,
+    ContentModule,
     AssessmentModule,
     VideoLearningModule,
   ],

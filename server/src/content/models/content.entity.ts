@@ -39,8 +39,8 @@ export class Content {
   @Column({ name: 'thumbnail_url', nullable: true, length: 1000 })
   thumbnailUrl!: string;
 
-  @Column({ name: 'uploaded_by_id' })
-  uploadedById!: string;
+  @Column({ name: 'uploaded_by_id', nullable: true })
+uploadedById!: string | null;
 
   @CreateDateColumn({ name: 'created_at' })
   createdAt!: Date;
@@ -49,7 +49,7 @@ export class Content {
   @JoinColumn({ name: 'topic_id' })
   topic!: Topic;
 
-  @ManyToOne(() => User, { onDelete: 'SET NULL' })
-  @JoinColumn({ name: 'uploaded_by_id' })
-  uploadedBy!: User;
+  @ManyToOne(() => User, { nullable: true, onDelete: 'SET NULL' })
+@JoinColumn({ name: 'uploaded_by_id' })
+uploadedBy!: User | null;
 }

@@ -1,4 +1,4 @@
-import React from 'react';
+﻿import React from 'react';
 import { Link, NavLink } from 'react-router-dom';
 import { KanthaBand } from '../../bengali-art/KanthaBorder';
 import { useAvatar } from '../../bengali-art/avatarConfig';
@@ -19,6 +19,18 @@ export const TopNav: React.FC = () => {
 
         <nav aria-label="Main" className="order-3 md:order-none w-full md:w-auto md:flex-1 overflow-x-auto -mx-1 px-1">
           <ul className="flex items-center gap-1 md:gap-2 whitespace-nowrap">
+            <li>
+              <NavLink
+                to="/note-requests"
+                className={({ isActive }) =>
+                  `block px-3 py-2 text-[15px] rounded-lg transition-colors no-underline ${
+                    isActive ? 'text-[#C84B31] stitch-underline font-medium' : 'text-[#6B5344] hover:text-[#2D1B0E]'
+                  }`
+                }
+              >
+                Notes Marketplace
+              </NavLink>
+            </li>
             {items.map((it) => (
               <li key={it.to}>
                 <NavLink
@@ -47,3 +59,4 @@ export const TopNav: React.FC = () => {
     </header>
   );
 };
+

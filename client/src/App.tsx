@@ -9,6 +9,8 @@ import { ProfilePage } from './modules/profile/pages/ProfilePage';
 import { VideoLessonsPage } from './modules/video-learning/pages/VideoLessonsPage';
 import { VideoLessonPage } from './modules/video-learning/pages/VideoLessonPage';
 import { TeacherVideoLessonsPage } from './modules/video-learning/pages/TeacherVideoLessonsPage';
+import RequestListPage from './note-bidding-client/notes-bidding-client/pages/RequestListPage';
+import RequestDetailPage from './note-bidding-client/notes-bidding-client/pages/RequestDetailPage';
 
 export const App: React.FC = () => {
   return (
@@ -20,10 +22,12 @@ export const App: React.FC = () => {
       <Route element={<AppShell />}>
         <Route path="/home" element={<HomePage />} />
         <Route path="/profile" element={<ProfilePage />} />
-
         <Route path="/student/videos" element={<VideoLessonsPage />} />
         <Route path="/student/videos/:lessonId" element={<VideoLessonPage />} />
         <Route path="/teacher/videos" element={<TeacherVideoLessonsPage />} />
+
+        <Route path="/note-requests" element={<RequestListPage />} />
+        <Route path="/note-requests/:id" element={<RequestDetailPage />} />
       </Route>
 
       <Route path="*" element={<Navigate to="/" replace />} />

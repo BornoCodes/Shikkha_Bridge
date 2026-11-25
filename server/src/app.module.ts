@@ -1,4 +1,5 @@
-﻿import { Module } from '@nestjs/common';
+﻿
+import { Module } from '@nestjs/common';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { TypeOrmModule } from '@nestjs/typeorm';
 
@@ -7,6 +8,7 @@ import { UsersModule } from './users/users.module';
 import { ContentModule } from './content/content.module';
 import { AssessmentModule } from './assessment/assessment.module';
 import { VideoLearningModule } from './video-learning/video-learning.module';
+import { NotesBiddingModule } from './notes-bidding-server/notes-bidding.module';
 
 import databaseConfig from './config/database.config';
 
@@ -26,6 +28,7 @@ import databaseConfig from './config/database.config';
     ContentModule,
     AssessmentModule,
     VideoLearningModule,
+    NotesBiddingModule,
   ],
 })
 export class AppModule {}
